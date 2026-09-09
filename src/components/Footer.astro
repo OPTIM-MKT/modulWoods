@@ -40,11 +40,10 @@ const year = new Date().getFullYear();
         <Image
           src={logo}
           alt="Modul Woods"
-          width={168}
-          height={48}
-          densities={[1, 2]}
+          width={216}
+          height={36}
           loading="lazy"
-          class="h-10 w-auto object-contain brightness-0 invert"
+          class="h-9 w-auto max-w-[216px] object-contain"
         />
         <p class="type-body mt-5 text-onPrimary/70">{i18n.footer.tagline}</p>
 
@@ -74,10 +73,7 @@ const year = new Date().getFullYear();
           {
             explore.map((key) => (
               <li>
-                <a
-                  href={path(key)}
-                  class="footer-link"
-                >
+                <a href={path(key)} class="footer-link">
                   {i18n.nav[key]}
                 </a>
               </li>
