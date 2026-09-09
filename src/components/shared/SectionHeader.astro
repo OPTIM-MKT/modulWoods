@@ -21,11 +21,12 @@ const {
   class: className = "",
 } = Astro.props;
 
-const titleClass = {
+const SIZE_CLASS: Record<"display" | "title" | "heading", string> = {
   display: "type-display",
   title: "type-title",
   heading: "type-heading",
-}[size];
+};
+const titleClass = SIZE_CLASS[size as "display" | "title" | "heading"];
 ---
 
 <header

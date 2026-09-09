@@ -8,7 +8,7 @@ import Footer from "@/components/Footer.astro";
 import ScrollTop from "@/components/shared/ScrollTop.astro";
 
 import { getI18N, getLang } from "@/i18n/i18n";
-import { LANGUAGES, SHOW_DEFAULT_LANG, DEFAULT_LANG } from "@/i18n/ui";
+import { LANGUAGES, DEFAULT_LANG } from "@/i18n/ui";
 import { switchLocalePath } from "@/i18n/utils";
 import { SITE } from "@/constants/site";
 
@@ -91,6 +91,14 @@ const alternates = (Object.keys(LANGUAGES) as (keyof typeof LANGUAGES)[]).map(
           document.documentElement.classList.toggle("dark", dark);
         } catch {}
       })();
+    </script>
+
+    {/* Carry the theme class across View Transitions so it never resets. */}
+    <script>
+      document.addEventListener("astro:before-swap", (event) => {
+        const isDark = document.documentElement.classList.contains("dark");
+        (event as any).newDocument.documentElement.classList.toggle("dark", isDark);
+      });
     </script>
 
     <ClientRouter />

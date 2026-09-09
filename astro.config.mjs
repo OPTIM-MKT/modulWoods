@@ -15,7 +15,7 @@ import icon from "astro-icon";
 
 export default defineConfig({
   site: "https://modul-woods.com",
-  output: "server",
+
   adapter: netlify({
     imageCDN: false,
   }),

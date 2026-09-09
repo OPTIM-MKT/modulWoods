@@ -5,8 +5,9 @@ export const LANGUAGES = {
 
 export type Lang = keyof typeof LANGUAGES;
 
-export const DEFAULT_LANG: Lang = "es";
+export const DEFAULT_LANG: Lang = "en";
 /** `prefixDefaultLocale: false` in astro.config — keep the two in sync. */
+/** English is the default: / → EN, /es/ → ES. */
 export const SHOW_DEFAULT_LANG = false;
 
 /**

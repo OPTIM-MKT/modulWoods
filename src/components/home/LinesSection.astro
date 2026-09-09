@@ -55,7 +55,7 @@ const lines = PRODUCT_CATEGORIES.map((key) => ({
 
     <ul class="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
       {
-        lines.map(({ key, name, description, image, count, href }, i) => (
+        lines.map(({ name, description, image, count, href }, i) => (
           <li class="reveal" style={`transition-delay:${i * 90}ms`}>
             <a
               href={href}

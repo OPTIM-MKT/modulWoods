@@ -1,12 +1,9 @@
 ---
 import ProductDetailView from "@/components/views/ProductDetailView.astro";
 import { getProducts } from "@/lib/products";
-import { DEFAULT_LANG } from "@/i18n/ui";
 
-const products = await getProducts(DEFAULT_LANG);
-const product = products.find(
-  ({ data }) => data.slug === Astro.params.slug,
-);
+const products = await getProducts("en");
+const product = products.find(({ data }) => data.slug === Astro.params.slug);
 
 if (!product) return Astro.rewrite("/404");
 ---

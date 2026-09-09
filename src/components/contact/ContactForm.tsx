@@ -17,7 +17,7 @@ interface Props {
 const buildSchema = (t: FormCopy) =>
   z.object({
     name: z.string().trim().min(2, t.required),
-    email: z.string().trim().email(t.invalidEmail),
+    email: z.string().trim().email({ message: t.invalidEmail }),
     phone: z.string().trim().optional(),
     company: z.string().trim().optional(),
     message: z.string().trim().min(12, t.tooShort),
