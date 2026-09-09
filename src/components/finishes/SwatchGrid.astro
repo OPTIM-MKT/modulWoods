@@ -10,6 +10,8 @@ interface Props {
   /** Stagger the entry animation (used when a tab panel becomes visible). */
   animate?: boolean;
   class?: string;
+  /** When true, each swatch that has a photo opens in a PhotoSwipe lightbox. */
+  lightbox?: boolean;
 }
 
 const {
@@ -17,8 +19,17 @@ const {
   title,
   size = "md",
   animate = false,
+  lightbox = false,
   class: className = "",
 } = Astro.props;
+
+/**
+ * Build a stable, URL-safe gallery id from the first swatch id so multiple
+ * SwatchGrids on the same page each get their own PhotoSwipe scope.
+ */
+const galleryId = lightbox && swatches.length
+  ? `swatch-gallery-${swatches[0].id}`
+  : undefined;
 ---
 
 {
@@ -27,6 +38,8 @@ const {
       {title && <h3 class="type-heading mb-6 text-ink">{title}</h3>}
 
       <ul
+        id={galleryId}
+        data-pswp-gallery={lightbox ? "" : undefined}
         class:list={[
           "grid gap-3 sm:gap-4",
           size === "md"
@@ -39,9 +52,17 @@ const {
             class:list={["swatch-item", animate && "swatch-item--animate"]}
             style={`--i:${Math.min(i, 12)}`}
           >
-            <figure class="press-soft group overflow-hidden rounded-[1.1rem] border border-line bg-panel shadow-e1 transition-shadow duration-300 hover:shadow-e2">
-              <div class="aspect-4/3 overflow-hidden bg-panelAlt">
-                {image ? (
+            {lightbox && image ? (
+              /* PhotoSwipe anchor — opens in the full-screen viewer */
+              <a
+                href={image.src}
+                data-pswp-width={image.width}
+                data-pswp-height={image.height}
+                data-pswp-caption={name}
+                aria-label={name}
+                class="press-soft group relative block overflow-hidden rounded-[1.1rem] border border-line bg-panel shadow-e1 transition-shadow duration-300 hover:shadow-e2 focus-visible:outline-offset-4"
+              >
+                <div class="relative aspect-4/3 overflow-hidden bg-panelAlt">
                   <Image
                     src={image}
                     alt={name}
@@ -54,32 +75,138 @@ const {
                     loading="lazy"
                     class="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
                   />
-                ) : (
-                  // No photograph on file — fall back to the flat brand colour.
+                  {/* Expand affordance */}
                   <span
-                    class="block h-full w-full"
-                    style={`background-color:${hex ?? "var(--panel-alt)"}`}
+                    class="pointer-events-none absolute inset-0 flex items-center justify-center bg-baseBlack/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                     aria-hidden="true"
-                  />
-                )}
-              </div>
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="15 3 21 3 21 9" />
+                      <polyline points="9 21 3 21 3 15" />
+                      <line x1="21" y1="3" x2="14" y2="10" />
+                      <line x1="3" y1="21" x2="10" y2="14" />
+                    </svg>
+                  </span>
+                </div>
+                <p
+                  class:list={[
+                    "px-4 font-medium text-ink",
+                    size === "md" ? "py-3.5 text-sm" : "py-2.5 text-xs",
+                  ]}
+                  data-swatch={id}
+                >
+                  {name}
+                </p>
+              </a>
+            ) : (
+              /* Static card — no image or lightbox disabled */
+              <figure class="press-soft group overflow-hidden rounded-[1.1rem] border border-line bg-panel shadow-e1 transition-shadow duration-300 hover:shadow-e2">
+                <div class="aspect-4/3 overflow-hidden bg-panelAlt">
+                  {image ? (
+                    <Image
+                      src={image}
+                      alt={name}
+                      widths={[240, 480]}
+                      sizes={
+                        size === "md"
+                          ? "(min-width: 1280px) 18vw, (min-width: 640px) 30vw, 45vw"
+                          : "(min-width: 640px) 14vw, 30vw"
+                      }
+                      loading="lazy"
+                      class="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
+                    />
+                  ) : (
+                    <span
+                      class="block h-full w-full"
+                      style={`background-color:${hex ?? "var(--panel-alt)"}`}
+                      aria-hidden="true"
+                    />
+                  )}
+                </div>
 
-              <figcaption
-                class:list={[
-                  "px-4 font-medium text-ink",
-                  size === "md" ? "py-3.5 text-sm" : "py-2.5 text-xs",
-                ]}
-                data-swatch={id}
-              >
-                {name}
-              </figcaption>
-            </figure>
+                <figcaption
+                  class:list={[
+                    "px-4 font-medium text-ink",
+                    size === "md" ? "py-3.5 text-sm" : "py-2.5 text-xs",
+                  ]}
+                  data-swatch={id}
+                >
+                  {name}
+                </figcaption>
+              </figure>
+            )}
           </li>
         ))}
       </ul>
     </div>
   )
 }
+
+{lightbox && (
+  <script>
+    import PhotoSwipeLightbox from "photoswipe/lightbox";
+    import "photoswipe/style.css";
+
+    let swatchLightboxes: PhotoSwipeLightbox[] = [];
+
+    function initSwatchGalleries() {
+      destroySwatchGalleries();
+
+      document
+        .querySelectorAll<HTMLElement>("[data-pswp-gallery]")
+        .forEach((el) => {
+          // Skip galleries already handled by Gallery.astro (those have an id
+          // starting with "pswp-") to avoid double-initialisation.
+          if (el.id.startsWith("pswp-")) return;
+
+          const lb = new PhotoSwipeLightbox({
+            gallery: `#${el.id}`,
+            children: "a",
+            bgOpacity: 0.92,
+            pswpModule: () => import("photoswipe"),
+          });
+
+          lb.on("uiRegister", () => {
+            lb.pswp?.ui?.registerElement({
+              name: "caption",
+              order: 9,
+              isButton: false,
+              appendTo: "root",
+              html: "",
+              onInit: (el, pswp) => {
+                el.classList.add("pswp-caption");
+                pswp.on("change", () => {
+                  el.textContent =
+                    pswp.currSlide?.data.element?.dataset.pswpCaption ?? "";
+                });
+              },
+            });
+          });
+
+          lb.init();
+          swatchLightboxes.push(lb);
+        });
+    }
+
+    function destroySwatchGalleries() {
+      swatchLightboxes.forEach((lb) => lb.destroy());
+      swatchLightboxes = [];
+    }
+
+    document.addEventListener("astro:page-load", initSwatchGalleries);
+    document.addEventListener("astro:before-swap", destroySwatchGalleries);
+  </script>
+)}
 
 <style>
   /* Only the tab panels ask for the staggered entry; elsewhere the reveal
