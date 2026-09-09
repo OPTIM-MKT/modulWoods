@@ -1,0 +1,98 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+import { usePath } from "@/i18n/utils";
+import { ALL_CABINET_COLORS } from "@/constants/site";
+
+interface Props {
+  product: CollectionEntry<"products">;
+  /** Index in the grid — staggers the reveal and gates eager loading. */
+  index?: number;
+  /**
+   * View transitions are only unique if a name appears once per document, so
+   * the detail page's "related" rail turns them off.
+   */
+  transitions?: boolean;
+}
+
+const { product, index = 0, transitions = true } = Astro.props;
+const { data } = product;
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+const path = usePath(lang);
+
+const swatches = data.colors
+  .map((id) => ALL_CABINET_COLORS.find((c) => c.id === id))
+  .filter((c) => c !== undefined);
+---
+
+<article
+  class="reveal h-full"
+  style={`transition-delay:${Math.min(index * 60, 400)}ms`}
+  data-product
+  data-line={data.category}
+  data-finishes={data.finishes.join(" ")}
+  data-colors={data.colors.join(" ")}
+  data-tops={data.tops.join(" ")}
+  data-name={data.title.toLowerCase()}
+>
+  <a
+    href={path("products", data.slug)}
+    class="press-soft group flex h-full flex-col overflow-hidden rounded-[1.25rem] border border-line bg-panel shadow-e1 transition-[box-shadow,border-color] duration-300 hover:border-lineStrong hover:shadow-e3"
+  >
+    <div class="relative aspect-4/3 overflow-hidden bg-panelAlt">
+      <Image
+        src={data.cover}
+        alt={data.title}
+        widths={[320, 640, 900]}
+        sizes="(min-width: 1280px) 26vw, (min-width: 768px) 40vw, 88vw"
+        loading={index < 6 ? "eager" : "lazy"}
+        transition:name={transitions ? `product-image-${data.slug}` : undefined}
+        class="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
+      />
+
+      <span
+        class="absolute left-3 top-3 rounded-full bg-canvas/85 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-ink backdrop-blur-md"
+      >
+        {i18n.products.lines[data.category]}
+      </span>
+    </div>
+
+    <div class="flex flex-1 flex-col p-5">
+      <h3
+        class="type-subheading text-ink"
+        transition:name={transitions ? `product-title-${data.slug}` : undefined}
+      >
+        {data.title}
+      </h3>
+
+      <p class="mt-1.5 text-xs tracking-[0.06em] text-faint">
+        {data.code} · {data.size}
+      </p>
+
+      <p class="mt-3 line-clamp-2 text-sm leading-relaxed text-muted">
+        {data.excerpt}
+      </p>
+
+      <div class="mt-auto flex items-center gap-1.5 pt-5">
+        {
+          swatches.map((color) => (
+            <span
+              class="h-4 w-4 rounded-full border border-line ring-1 ring-canvas"
+              style={`background-color:${color.swatch}`}
+              title={color.name}
+            >
+              <span class="sr-only">{color.name}</span>
+            </span>
+          ))
+        }
+        <span class="ml-auto text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-secondary opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          {i18n.common.learnMore}
+        </span>
+      </div>
+    </div>
+  </a>
+</article>

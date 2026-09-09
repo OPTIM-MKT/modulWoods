@@ -1,0 +1,52 @@
+---
+import { Image } from "astro:assets";
+
+import aboutImage from "@/assets/beggin.png";
+import StatGrid from "@/components/shared/StatGrid.astro";
+import { getI18N, getLang } from "@/i18n/i18n";
+
+const lang = getLang(Astro.currentLocale);
+const about = getI18N(lang)["about-us"];
+---
+
+<section class="section-y">
+  <div class="container-x">
+    <div class="grid gap-12 lg:grid-cols-[1fr_0.85fr] lg:gap-16">
+      <!-- Story -->
+      <div class="reveal max-w-2xl">
+        <p class="type-eyebrow flex items-center gap-3 text-secondary">
+          <span class="h-px w-8 bg-secondary/60" aria-hidden="true"></span>
+          {about.eyebrow}
+        </p>
+
+        <h1 class="type-display mt-5 text-ink">{about.title}</h1>
+
+        <div class="mt-8 space-y-5">
+          {
+            about.content.map((paragraph) => (
+              <p class="type-body text-muted">{paragraph}</p>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Portrait — sticky so it stays with the copy on tall screens -->
+      <div class="reveal lg:sticky lg:top-32 lg:self-start" style="transition-delay:120ms">
+        <div
+          class="overflow-hidden rounded-[1.5rem] bg-panelAlt shadow-e2"
+        >
+          <Image
+            src={aboutImage}
+            alt={about.title}
+            widths={[480, 800, 1100]}
+            sizes="(min-width: 1024px) 38vw, 92vw"
+            loading="eager"
+            class="aspect-3/4 h-full w-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+
+    <StatGrid stats={about.stats} class="mt-16 lg:mt-20" />
+  </div>
+</section>

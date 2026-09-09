@@ -1,30 +1,153 @@
 ---
-import "../styles/global.css";
+import "@/styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import { SEO } from "astro-seo";
+
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+import ScrollTop from "@/components/shared/ScrollTop.astro";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+import { LANGUAGES, SHOW_DEFAULT_LANG, DEFAULT_LANG } from "@/i18n/ui";
+import { switchLocalePath } from "@/i18n/utils";
+import { SITE } from "@/constants/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Opt out of the default top padding when the page opens with a full-bleed hero. */
+  bleed?: boolean;
+}
+
+const { title, description, bleed = false } = Astro.props;
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+
+const pageTitle = title ?? i18n.seo.title;
+const pageDescription = description ?? i18n.seo.description;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
+
+const alternates = (Object.keys(LANGUAGES) as (keyof typeof LANGUAGES)[]).map(
+  (code) => ({
+    hrefLang: LANGUAGES[code].code,
+    href: new URL(switchLocalePath(Astro.url, code), Astro.site ?? SITE.url)
+      .href,
+  }),
+);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={LANGUAGES[lang].locale} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/png" href="/ico.png" />
-    <link rel="icon" href="/ico.png" />
-    <ClientRouter />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <title>Modul Woods</title>
+    <link rel="icon" type="image/png" href="/ico.png" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <SEO
+      title={pageTitle}
+      description={pageDescription}
+      canonical={canonical}
+      openGraph={{
+        basic: {
+          title: pageTitle,
+          type: "website",
+          image: new URL("/logo.png", Astro.site ?? SITE.url).href,
+          url: canonical,
+        },
+        optional: { siteName: SITE.name, description: pageDescription },
+      }}
+      extend={{
+        link: [
+          ...alternates.map(({ hrefLang, href }) => ({
+            rel: "alternate",
+            hreflang: hrefLang,
+            href,
+          })),
+          {
+            rel: "alternate",
+            hreflang: "x-default",
+            href: new URL(
+              switchLocalePath(Astro.url, DEFAULT_LANG),
+              Astro.site ?? SITE.url,
+            ).href,
+          },
+        ],
+        meta: [{ name: "theme-color", content: "#24160f" }],
+      }}
+    />
+
+    {/* Paint the stored theme before first paint — no flash, no layout shift. */}
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem("theme");
+          const dark =
+            stored === "dark" ||
+            (!stored &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.classList.toggle("dark", dark);
+        } catch {}
+      })();
+    </script>
+
+    <ClientRouter />
   </head>
-  <body>
-    <slot />
+
+  <body class="min-h-dvh bg-canvas text-ink antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-100 focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:text-sm focus:text-canvas"
+    >
+      {i18n.nav.skip}
+    </a>
+
+    <Navbar />
+
+    <main id="main" class:list={[!bleed && "pt-20 lg:pt-24"]}>
+      <slot />
+    </main>
+
+    <Footer />
+    <ScrollTop label={i18n.common.backToTop} />
+
+    {/* One IntersectionObserver drives every `.reveal` on the page. */}
+    <script>
+      let observer: IntersectionObserver | undefined;
+
+      function initReveal() {
+        observer?.disconnect();
+
+        const targets = document.querySelectorAll<HTMLElement>(
+          ".reveal:not(.is-visible)",
+        );
+        if (!targets.length) return;
+
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          targets.forEach((el) => el.classList.add("is-visible"));
+          return;
+        }
+
+        observer = new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add("is-visible");
+              obs.unobserve(entry.target);
+            });
+          },
+          { rootMargin: "0px 0px -12% 0px", threshold: 0.01 },
+        );
+
+        targets.forEach((el) => observer!.observe(el));
+      }
+
+      document.addEventListener("astro:page-load", initReveal);
+      document.addEventListener("astro:before-swap", () =>
+        observer?.disconnect(),
+      );
+    </script>
   </body>
 </html>
-
-<style>
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-  }
-</style>

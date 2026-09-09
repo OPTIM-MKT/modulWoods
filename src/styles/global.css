@@ -1,13 +1,515 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:where(.dark,.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
+/* ---------------------------------------------------------------------------
+   Palette
+   Two layers on purpose: raw brand constants never change, semantic tokens do.
+   Only the semantic layer is re-declared for dark mode, so a component that
+   reads `bg-canvas` / `text-ink` is theme-correct without a single dark: class.
+--------------------------------------------------------------------------- */
+:root {
+  /* Brand constants */
+  --brand-coffee: #24160f;
+  --brand-amber: #f48220;
+  --brand-cream: #f8f3ec;
+
+  /* Semantic — light */
+  --canvas: var(--brand-cream);
+  --panel: #fffcf7;
+  --panel-alt: #efe6d8;
+  --ink: #24160f;
+  --muted: #7b6a5d;
+  --faint: #a3948a;
+  --line: color-mix(in oklab, var(--brand-coffee) 14%, transparent);
+  --line-strong: color-mix(in oklab, var(--brand-coffee) 26%, transparent);
+  --primary: var(--brand-coffee);
+  --on-primary: #f8f3ec;
+  --secondary: var(--brand-amber);
+  --on-secondary: #1b0f07;
+  --base-black: #14100d;
+
+  /* Elevation — warm shadows, never neutral gray on a cream ground */
+  --shadow-e1: 0 1px 2px color-mix(in oklab, var(--brand-coffee) 8%, transparent);
+  --shadow-e2:
+    0 2px 4px color-mix(in oklab, var(--brand-coffee) 6%, transparent),
+    0 8px 20px color-mix(in oklab, var(--brand-coffee) 8%, transparent);
+  --shadow-e3:
+    0 4px 8px color-mix(in oklab, var(--brand-coffee) 8%, transparent),
+    0 24px 56px color-mix(in oklab, var(--brand-coffee) 14%, transparent);
+
+  /* Translucent chrome (§12 — material weight encodes hierarchy) */
+  --chrome: color-mix(in oklab, var(--brand-cream) 72%, transparent);
+  --chrome-edge: rgb(255 255 255 / 0.5);
+
+  color-scheme: light;
+}
+
+.dark {
+  --canvas: #14100d;
+  --panel: #1d1610;
+  --panel-alt: #271e16;
+  --ink: #f4ece1;
+  --muted: #a89588;
+  --faint: #7d6e62;
+  --line: color-mix(in oklab, #f4ece1 14%, transparent);
+  --line-strong: color-mix(in oklab, #f4ece1 28%, transparent);
+  --primary: #1d1610;
+  --on-primary: #f4ece1;
+  --on-secondary: #1b0f07;
+
+  --shadow-e1: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-e2: 0 2px 4px rgb(0 0 0 / 0.3), 0 8px 20px rgb(0 0 0 / 0.45);
+  --shadow-e3: 0 4px 8px rgb(0 0 0 / 0.35), 0 24px 56px rgb(0 0 0 / 0.55);
+
+  --chrome: color-mix(in oklab, #14100d 72%, transparent);
+  --chrome-edge: rgb(255 255 255 / 0.08);
+
+  color-scheme: dark;
+}
 
 @theme inline {
-    --color-primary: #013383;
-    --color-secondary: #233060;
-    --color-accent: #fab702;
-}
-    
+  --color-canvas: var(--canvas);
+  --color-panel: var(--panel);
+  --color-panelAlt: var(--panel-alt);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-lineStrong: var(--line-strong);
+  --color-primary: var(--primary);
+  --color-onPrimary: var(--on-primary);
+  --color-secondary: var(--secondary);
+  --color-onSecondary: var(--on-secondary);
+  --color-baseBlack: var(--base-black);
 
+  --shadow-e1: var(--shadow-e1);
+  --shadow-e2: var(--shadow-e2);
+  --shadow-e3: var(--shadow-e3);
+
+  --font-sans:
+    system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: ui-serif, Georgia, "Times New Roman", serif;
+
+  --radius-card: 1.25rem;
+
+  /* Apple springs, transcribed as bézier approximations for CSS-only motion.
+     Anything a finger can grab uses a real spring in JS instead (§4). */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-soft: cubic-bezier(0.64, 0, 0.78, 0);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* Ease the light↔dark swap so the theme toggle isn't a brightness jump (§14) */
+    transition:
+      background-color 260ms var(--ease-standard),
+      color 260ms var(--ease-standard);
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--secondary) 32%, transparent);
+    color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Scroll-margin so anchored sections clear the floating header */
+  :target {
+    scroll-margin-top: 6rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Typography (§15 — tracking and leading are size-specific, never one value)
+--------------------------------------------------------------------------- */
+@utility type-display {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.028em;
+  font-weight: 400;
+  font-optical-sizing: auto;
+  text-wrap: balance;
+}
+
+@utility type-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.8vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.022em;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+@utility type-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  line-height: 1.2;
+  letter-spacing: -0.014em;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+@utility type-subheading {
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  line-height: 1.35;
+  letter-spacing: -0.008em;
+  font-weight: 600;
+}
+
+@utility type-body {
+  font-size: 1rem;
+  line-height: 1.68;
+  letter-spacing: 0;
+  text-wrap: pretty;
+}
+
+@utility type-eyebrow {
+  font-size: 0.72rem;
+  line-height: 1.2;
+  /* Small text takes positive tracking — the inverse of the display sizes */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+@utility type-label {
+  font-size: 0.75rem;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+   Layout rhythm
+--------------------------------------------------------------------------- */
+@utility container-x {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 80rem;
+  padding-inline: 1.25rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2rem;
+  }
+
+  @media (width >= 80rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+@utility section-y {
+  padding-block: clamp(3.5rem, 8vw, 7rem);
+}
+
+@utility section-y-sm {
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+}
+
+/* ---------------------------------------------------------------------------
+   Interaction primitives (§1 — feedback on pointer-down, instant)
+--------------------------------------------------------------------------- */
+@utility press {
+  transition:
+    transform 140ms var(--ease-out-soft),
+    background-color 200ms var(--ease-standard),
+    color 200ms var(--ease-standard),
+    border-color 200ms var(--ease-standard),
+    box-shadow 200ms var(--ease-standard);
+
+  &:active {
+    transform: scale(0.97);
+    transition-duration: 90ms;
+  }
+}
+
+@utility press-soft {
+  transition:
+    transform 220ms var(--ease-out-soft),
+    box-shadow 220ms var(--ease-out-soft);
+
+  &:active {
+    transform: scale(0.99);
+    transition-duration: 90ms;
+  }
+}
+
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border-radius: 9999px;
+  padding: 0.8rem 1.5rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 140ms var(--ease-out-soft),
+    background-color 200ms var(--ease-standard),
+    border-color 200ms var(--ease-standard),
+    color 200ms var(--ease-standard),
+    box-shadow 200ms var(--ease-standard);
+
+  &:active {
+    transform: scale(0.97);
+    transition-duration: 90ms;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+@utility btn-primary {
+  background-color: var(--secondary);
+  color: var(--on-secondary);
+  box-shadow: var(--shadow-e1);
+
+  &:hover {
+    background-color: color-mix(in oklab, var(--secondary) 88%, black);
+    box-shadow: var(--shadow-e2);
+  }
+}
+
+@utility btn-solid {
+  background-color: var(--ink);
+  color: var(--canvas);
+
+  &:hover {
+    background-color: color-mix(in oklab, var(--ink) 86%, var(--secondary));
+  }
+}
+
+@utility btn-invert {
+  background-color: var(--on-primary);
+  color: var(--brand-coffee);
+
+  &:hover {
+    background-color: white;
+  }
+}
+
+@utility btn-outline {
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+
+  &:hover {
+    background-color: var(--panel-alt);
+    border-color: var(--ink);
+  }
+}
+
+@utility btn-glass {
+  border: 1px solid rgb(255 255 255 / 0.28);
+  background-color: rgb(255 255 255 / 0.1);
+  color: white;
+  backdrop-filter: blur(14px) saturate(160%);
+
+  &:hover {
+    background-color: rgb(255 255 255 / 0.2);
+    border-color: rgb(255 255 255 / 0.5);
+  }
+}
+
+@utility icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  width: 2.5rem;
+  flex-shrink: 0;
+  cursor: pointer;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  color: currentColor;
+  backdrop-filter: blur(12px);
+  transition:
+    transform 140ms var(--ease-out-soft),
+    background-color 200ms var(--ease-standard),
+    border-color 200ms var(--ease-standard);
+
+  &:hover {
+    border-color: var(--line-strong);
+  }
+
+  &:active {
+    transform: scale(0.92);
+    transition-duration: 90ms;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Surfaces
+--------------------------------------------------------------------------- */
+@utility card {
+  background-color: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+}
+
+@utility chrome-blur {
+  background-color: var(--chrome);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+/* A gradient mask instead of a 1px rule where content meets floating chrome (§12) */
+@utility edge-fade {
+  mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+}
+
+@utility hairline-t {
+  border-top: 1px solid var(--line);
+}
+
+@utility hairline-b {
+  border-bottom: 1px solid var(--line);
+}
+
+@utility field {
+  width: 100%;
+  border-radius: 0.85rem;
+  border: 1px solid var(--line);
+  background-color: var(--panel);
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  color: var(--ink);
+  transition:
+    border-color 180ms var(--ease-standard),
+    box-shadow 180ms var(--ease-standard);
+
+  &::placeholder {
+    color: var(--faint);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px
+      color-mix(in oklab, var(--secondary) 22%, transparent);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Reveal on scroll — CSS-only, so it costs no JS and degrades cleanly
+--------------------------------------------------------------------------- */
+@utility reveal {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition:
+    opacity 700ms var(--ease-out-soft),
+    transform 700ms var(--ease-out-soft);
+
+  &.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   View transitions — product name + image travel between grid and detail
+--------------------------------------------------------------------------- */
+@layer base {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: 420ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Accessibility preferences (§14)
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-transparency: reduce) {
+  :root,
+  .dark {
+    --chrome: var(--canvas);
+  }
+
+  .chrome-blur,
+  .btn-glass,
+  .icon-btn {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --line: color-mix(in oklab, var(--brand-coffee) 38%, transparent);
+    --muted: #4c3d33;
+  }
+
+  .dark {
+    --line: color-mix(in oklab, #f4ece1 42%, transparent);
+    --muted: #d3c6ba;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Invalid form control — the border and ring shift to the error colour while
+   the inline message renders next to the field. */
+.field--invalid {
+  border-color: color-mix(in oklab, #dc2626 70%, var(--line));
+}
+
+.field--invalid:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px color-mix(in oklab, #dc2626 20%, transparent);
+}

@@ -1,0 +1,102 @@
+---
+import { Image } from "astro:assets";
+import { FiArrowUpRight } from "react-icons/fi";
+
+import hospitality from "@/assets/hero/hospitality-hero-fluted.jpeg";
+import premium from "@/assets/hero/premium-hero-navy.jpeg";
+import essential from "@/assets/hero/essential-hero-green.jpeg";
+
+import SectionHeader from "@/components/shared/SectionHeader.astro";
+import { getI18N, getLang } from "@/i18n/i18n";
+import { usePath } from "@/i18n/utils";
+import { PRODUCT_CATEGORIES } from "@/constants/site";
+
+interface Props {
+  /** Collection count per line, so the card reflects the real catalogue. */
+  counts: Record<string, number>;
+}
+
+const { counts } = Astro.props;
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+const path = usePath(lang);
+
+const art = { hospitality, premium, essential };
+
+const lines = PRODUCT_CATEGORIES.map((key) => ({
+  key,
+  name: i18n.products.lines[key],
+  description: i18n.products.lineDescriptions[key],
+  image: art[key],
+  count: counts[key] ?? 0,
+  href: `${path("products")}?line=${key}`,
+}));
+---
+
+<section class="section-y bg-panelAlt/45">
+  <div class="container-x">
+    <div
+      class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"
+    >
+      <SectionHeader
+        eyebrow={i18n.home.products.eyebrow}
+        title={i18n.home.products.title}
+        description={i18n.home.products.description}
+      />
+
+      <a
+        href={path("products")}
+        class="reveal btn btn-outline shrink-0 self-start sm:self-end"
+      >
+        {i18n.common.viewAll}
+      </a>
+    </div>
+
+    <ul class="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
+      {
+        lines.map(({ key, name, description, image, count, href }, i) => (
+          <li class="reveal" style={`transition-delay:${i * 90}ms`}>
+            <a
+              href={href}
+              class="press-soft group relative flex h-full min-h-[24rem] flex-col justify-end overflow-hidden rounded-[1.5rem] bg-baseBlack p-7 shadow-e1 hover:shadow-e3"
+            >
+              <Image
+                src={image}
+                alt=""
+                widths={[400, 800]}
+                sizes="(min-width: 1024px) 32vw, (min-width: 640px) 48vw, 92vw"
+                loading="lazy"
+                class="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
+              />
+              <span
+                class="absolute inset-0 bg-linear-to-t from-baseBlack/90 via-baseBlack/45 to-baseBlack/10 transition-opacity duration-500 group-hover:from-baseBlack/95"
+                aria-hidden="true"
+              />
+
+              <span class="relative">
+                <span class="type-label text-secondary">
+                  {count} {i18n.products.filters.results}
+                </span>
+
+                <span class="mt-3 flex items-center justify-between gap-4">
+                  <span class="type-heading text-white">{name}</span>
+                  <span
+                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/25 text-white transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:bg-white/15"
+                    aria-hidden="true"
+                  >
+                    <FiArrowUpRight className="h-4 w-4" />
+                  </span>
+                </span>
+
+                <span class="mt-3 block text-sm leading-relaxed text-white/70">
+                  {description}
+                </span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

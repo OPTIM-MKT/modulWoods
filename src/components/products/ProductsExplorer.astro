@@ -1,0 +1,258 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { FiSliders } from "react-icons/fi";
+
+import FilterPanel from "./FilterPanel.astro";
+import ProductCard from "./ProductCard.astro";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+
+interface Props {
+  products: CollectionEntry<"products">[];
+}
+
+const { products } = Astro.props;
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+const f = i18n.products.filters;
+
+/** Counts drive the sidebar badges and disable options nothing matches. */
+const tally = (pick: (p: CollectionEntry<"products">) => string[]) =>
+  products.reduce<Record<string, number>>((acc, product) => {
+    for (const value of pick(product)) acc[value] = (acc[value] ?? 0) + 1;
+    return acc;
+  }, {});
+
+const counts = {
+  line: tally((p) => [p.data.category]),
+  finish: tally((p) => [...p.data.finishes]),
+  color: tally((p) => [...p.data.colors]),
+  top: tally((p) => [...p.data.tops]),
+};
+---
+
+<section class="section-y" data-explorer data-noun-singular={f.resultsOne}>
+  <div class="container-x">
+    <!-- Mobile bar: filter trigger + live result count -->
+    <div
+      class="mb-8 flex items-center justify-between gap-4 lg:hidden"
+    >
+      <button
+        type="button"
+        data-filter-open
+        class="btn btn-outline"
+        aria-controls="filter-panel"
+        aria-expanded="false"
+      >
+        <FiSliders className="h-4 w-4" aria-hidden="true" />
+        {f.open}
+      </button>
+
+      <p class="text-sm text-muted">
+        <span data-result-count class="font-semibold text-ink"
+          >{products.length}</span
+        >
+        <span data-result-noun>{f.results}</span>
+      </p>
+    </div>
+
+    <div class="grid gap-10 lg:grid-cols-[16rem_1fr] lg:gap-14">
+      <!-- Desktop sidebar / mobile sheet -->
+      <div
+        data-filter-shell
+        class="pointer-events-none fixed inset-0 z-60 lg:pointer-events-auto lg:relative lg:z-auto lg:block"
+      >
+        <div
+          data-filter-scrim
+          class="absolute inset-0 bg-baseBlack/45 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 lg:hidden"
+        >
+        </div>
+
+        <div
+          data-filter-sheet
+          class="absolute inset-y-0 right-0 w-[min(22rem,88vw)] translate-x-full overflow-y-auto bg-canvas p-6 shadow-e3 transition-transform duration-[320ms] will-change-transform lg:static lg:w-auto lg:translate-x-0 lg:overflow-visible lg:bg-transparent lg:p-0 lg:shadow-none"
+          style="transition-timing-function: var(--ease-out-soft)"
+        >
+          <FilterPanel counts={counts} />
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div>
+        <p class="mb-6 hidden text-sm text-muted lg:block">
+          <span data-result-count class="font-semibold text-ink"
+            >{products.length}</span
+          >
+          <span data-result-noun>{f.results}</span>
+        </p>
+
+        <ul
+          data-product-grid
+          class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
+        >
+          {
+            products.map((product, index) => (
+              <li class="contents">
+                <ProductCard product={product} index={index} />
+              </li>
+            ))
+          }
+        </ul>
+
+        <div
+          data-empty-state
+          hidden
+          class="rounded-card border border-dashed border-lineStrong px-6 py-20 text-center"
+        >
+          <p class="type-subheading text-ink">{f.empty}</p>
+          <button type="button" data-filter-clear class="btn btn-solid mt-6">
+            {f.emptyAction}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const GROUPS = ["line", "finish", "color", "top"] as const;
+  type Group = (typeof GROUPS)[number];
+
+  function initExplorer() {
+    const root = document.querySelector<HTMLElement>("[data-explorer]");
+    if (!root) return;
+
+    const form = root.querySelector<HTMLFormElement>("[data-filter-form]");
+    const grid = root.querySelector<HTMLElement>("[data-product-grid]");
+    const empty = root.querySelector<HTMLElement>("[data-empty-state]");
+    if (!form || !grid || !empty) return;
+
+    const cards = [...grid.querySelectorAll<HTMLElement>("[data-product]")];
+    const counters = root.querySelectorAll<HTMLElement>("[data-result-count]");
+    const nouns = root.querySelectorAll<HTMLElement>("[data-result-noun]");
+
+    // Read once from the markup so the copy stays in the dictionary.
+    const nounPlural = nouns[0]?.textContent ?? "";
+    const nounSingular =
+      root.getAttribute("data-noun-singular") ?? nounPlural;
+
+    const selected = (group: Group) =>
+      new FormData(form)
+        .getAll(group)
+        .map(String)
+        .filter(Boolean);
+
+    /** AND between groups, OR inside a group. */
+    const matches = (card: HTMLElement, group: Group, values: string[]) => {
+      if (!values.length) return true;
+      const attr =
+        group === "line"
+          ? card.dataset.line
+          : group === "finish"
+            ? card.dataset.finishes
+            : group === "color"
+              ? card.dataset.colors
+              : card.dataset.tops;
+      const owned = (attr ?? "").split(" ");
+      return values.some((value) => owned.includes(value));
+    };
+
+    const apply = ({ pushState = true } = {}) => {
+      const active = Object.fromEntries(
+        GROUPS.map((group) => [group, selected(group)]),
+      ) as Record<Group, string[]>;
+
+      let visible = 0;
+
+      cards.forEach((card) => {
+        const shown = GROUPS.every((group) =>
+          matches(card, group, active[group]),
+        );
+        card.hidden = !shown;
+        if (shown) visible += 1;
+      });
+
+      empty.hidden = visible > 0;
+      grid.hidden = visible === 0;
+
+      counters.forEach((el) => (el.textContent = String(visible)));
+      nouns.forEach(
+        (el) => (el.textContent = visible === 1 ? nounSingular : nounPlural),
+      );
+
+      if (!pushState) return;
+
+      // Filters live in the URL so a filtered view can be linked and shared.
+      const params = new URLSearchParams();
+      GROUPS.forEach((group) => {
+        if (active[group].length) params.set(group, active[group].join(","));
+      });
+      const query = params.toString();
+      history.replaceState(
+        null,
+        "",
+        query ? `${location.pathname}?${query}` : location.pathname,
+      );
+    };
+
+    /** Restores state from `?line=premium&color=white` on first paint. */
+    const hydrateFromUrl = () => {
+      const params = new URLSearchParams(location.search);
+      GROUPS.forEach((group) => {
+        const values = (params.get(group) ?? "").split(",").filter(Boolean);
+        if (!values.length) return;
+        form
+          .querySelectorAll<HTMLInputElement>(`input[name="${group}"]`)
+          .forEach((input) => {
+            if (values.includes(input.value)) input.checked = true;
+          });
+      });
+      apply({ pushState: false });
+    };
+
+    form.addEventListener("change", () => apply());
+
+    root.querySelectorAll("[data-filter-clear]").forEach((btn) =>
+      btn.addEventListener("click", () => {
+        form.reset();
+        apply();
+      }),
+    );
+
+    /* ---- mobile sheet ---------------------------------------------------- */
+    const shell = root.querySelector<HTMLElement>("[data-filter-shell]");
+    const sheet = root.querySelector<HTMLElement>("[data-filter-sheet]");
+    const scrim = root.querySelector<HTMLElement>("[data-filter-scrim]");
+    const trigger = root.querySelector<HTMLElement>("[data-filter-open]");
+
+    if (shell && sheet && scrim && trigger) {
+      const setOpen = (open: boolean) => {
+        shell.classList.toggle("pointer-events-none", !open);
+        scrim.classList.toggle("opacity-0", !open);
+        scrim.classList.toggle("opacity-100", open);
+        // Enters from the right, leaves to the right — one path, both ways.
+        sheet.classList.toggle("translate-x-full", !open);
+        sheet.classList.toggle("translate-x-0", open);
+        trigger.setAttribute("aria-expanded", String(open));
+        document.documentElement.style.overflow = open ? "hidden" : "";
+      };
+
+      trigger.addEventListener("click", () => setOpen(true));
+      scrim.addEventListener("click", () => setOpen(false));
+      root
+        .querySelectorAll("[data-filter-close]")
+        .forEach((btn) => btn.addEventListener("click", () => setOpen(false)));
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") setOpen(false);
+      });
+    }
+
+    hydrateFromUrl();
+  }
+
+  document.addEventListener("astro:page-load", initExplorer);
+  document.addEventListener("astro:before-swap", () => {
+    document.documentElement.style.overflow = "";
+  });
+</script>

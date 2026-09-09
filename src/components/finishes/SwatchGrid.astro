@@ -1,0 +1,108 @@
+---
+import { Image } from "astro:assets";
+import type { Swatch } from "@/lib/finishes";
+
+interface Props {
+  swatches: Swatch[];
+  title?: string;
+  /** `md` for the finishes page, `sm` for the compact rail on a product page. */
+  size?: "sm" | "md";
+  /** Stagger the entry animation (used when a tab panel becomes visible). */
+  animate?: boolean;
+  class?: string;
+}
+
+const {
+  swatches,
+  title,
+  size = "md",
+  animate = false,
+  class: className = "",
+} = Astro.props;
+---
+
+{
+  swatches.length > 0 && (
+    <div class={className}>
+      {title && <h3 class="type-heading mb-6 text-ink">{title}</h3>}
+
+      <ul
+        class:list={[
+          "grid gap-3 sm:gap-4",
+          size === "md"
+            ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+            : "grid-cols-3 sm:grid-cols-4",
+        ]}
+      >
+        {swatches.map(({ id, name, image, hex }, i) => (
+          <li
+            class:list={["swatch-item", animate && "swatch-item--animate"]}
+            style={`--i:${Math.min(i, 12)}`}
+          >
+            <figure class="press-soft group overflow-hidden rounded-[1.1rem] border border-line bg-panel shadow-e1 transition-shadow duration-300 hover:shadow-e2">
+              <div class="aspect-4/3 overflow-hidden bg-panelAlt">
+                {image ? (
+                  <Image
+                    src={image}
+                    alt={name}
+                    widths={[240, 480]}
+                    sizes={
+                      size === "md"
+                        ? "(min-width: 1280px) 18vw, (min-width: 640px) 30vw, 45vw"
+                        : "(min-width: 640px) 14vw, 30vw"
+                    }
+                    loading="lazy"
+                    class="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
+                  />
+                ) : (
+                  // No photograph on file — fall back to the flat brand colour.
+                  <span
+                    class="block h-full w-full"
+                    style={`background-color:${hex ?? "var(--panel-alt)"}`}
+                    aria-hidden="true"
+                  />
+                )}
+              </div>
+
+              <figcaption
+                class:list={[
+                  "px-4 font-medium text-ink",
+                  size === "md" ? "py-3.5 text-sm" : "py-2.5 text-xs",
+                ]}
+                data-swatch={id}
+              >
+                {name}
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+<style>
+  /* Only the tab panels ask for the staggered entry; elsewhere the reveal
+     observer already handles arrival and a second animation would fight it. */
+  .swatch-item--animate {
+    animation: swatch-in 460ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(var(--i) * 28ms);
+  }
+
+  @keyframes swatch-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swatch-item--animate {
+      animation: none;
+    }
+  }
+</style>

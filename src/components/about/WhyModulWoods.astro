@@ -1,0 +1,58 @@
+---
+import { Image } from "astro:assets";
+
+import about1 from "@/assets/about.jpeg";
+import about2 from "@/assets/about2.jpeg";
+
+import FeatureList from "@/components/shared/FeatureList.astro";
+import { getI18N, getLang } from "@/i18n/i18n";
+
+const lang = getLang(Astro.currentLocale);
+const why = getI18N(lang)["about-us"].whyModulWoods;
+---
+
+<section class="section-y bg-panelAlt/45">
+  <div class="container-x">
+    <div class="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
+      <!-- Paired frames: one anchors the grid, the second overlaps for depth -->
+      <div class="reveal relative pb-20 sm:pb-24 lg:pb-28">
+        <div class="w-[82%] overflow-hidden rounded-[1.5rem] bg-panel shadow-e2">
+          <Image
+            src={about1}
+            alt={why.title}
+            widths={[480, 800, 1100]}
+            sizes="(min-width: 1024px) 38vw, 76vw"
+            loading="lazy"
+            class="aspect-4/5 h-full w-full object-cover"
+          />
+        </div>
+
+        <div
+          class="absolute bottom-0 right-0 w-[56%] overflow-hidden rounded-[1.25rem] border-4 border-canvas bg-panel shadow-e3"
+        >
+          <Image
+            src={about2}
+            alt=""
+            widths={[320, 640]}
+            sizes="(min-width: 1024px) 24vw, 50vw"
+            loading="lazy"
+            class="aspect-square h-full w-full object-cover"
+          />
+        </div>
+      </div>
+
+      <!-- Copy -->
+      <div class="reveal max-w-xl" style="transition-delay:100ms">
+        <p class="type-eyebrow flex items-center gap-3 text-secondary">
+          <span class="h-px w-8 bg-secondary/60" aria-hidden="true"></span>
+          {why.eyebrow}
+        </p>
+
+        <h2 class="type-title mt-4 text-ink">{why.title}</h2>
+        <p class="type-body mt-5 text-muted">{why.description}</p>
+
+        <FeatureList items={why.features} class="mt-9" />
+      </div>
+    </div>
+  </div>
+</section>

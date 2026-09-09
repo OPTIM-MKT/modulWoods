@@ -1,0 +1,30 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AboutIntro from "@/components/about/AboutIntro.astro";
+import WhyModulWoods from "@/components/about/WhyModulWoods.astro";
+import CtaSection from "@/components/shared/CtaSection.astro";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+import { usePath } from "@/i18n/utils";
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+const path = usePath(lang);
+
+const seo = i18n.seo.pages.about;
+---
+
+<Layout title={seo.title} description={seo.description}>
+  <AboutIntro />
+  <WhyModulWoods />
+
+  <CtaSection
+    eyebrow={i18n.home.cta.eyebrow}
+    title={i18n.home.cta.title}
+    description={i18n.home.cta.description}
+    primaryLabel={i18n.home.cta.primary}
+    primaryHref={path("contact")}
+    secondaryLabel={i18n.common.viewAll}
+    secondaryHref={path("products")}
+  />
+</Layout>

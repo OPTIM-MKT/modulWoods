@@ -1,0 +1,247 @@
+---
+import { FiX } from "react-icons/fi";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+import {
+  CABINET_COLORS,
+  CABINET_FINISHES,
+  PRODUCT_CATEGORIES,
+  TOP_MATERIALS,
+} from "@/constants/site";
+
+interface Props {
+  /** How many products carry each value — a zero-result filter is disabled. */
+  counts: {
+    line: Record<string, number>;
+    finish: Record<string, number>;
+    color: Record<string, number>;
+    top: Record<string, number>;
+  };
+}
+
+const { counts } = Astro.props;
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+const f = i18n.products.filters;
+
+const groups = [
+  {
+    key: "line",
+    label: f.line,
+    options: PRODUCT_CATEGORIES.map((id) => ({
+      id,
+      name: i18n.products.lines[id],
+      count: counts.line[id] ?? 0,
+    })),
+  },
+  {
+    key: "finish",
+    label: f.finish,
+    options: CABINET_FINISHES.map((id) => ({
+      id,
+      name: i18n.finishes.tabs[id],
+      count: counts.finish[id] ?? 0,
+    })),
+  },
+  {
+    key: "top",
+    label: f.top,
+    options: TOP_MATERIALS.map((id) => ({
+      id,
+      name: i18n.finishes.groups[id],
+      count: counts.top[id] ?? 0,
+    })),
+  },
+] as const;
+---
+
+<aside
+  id="filter-panel"
+  data-filter-panel
+  class="lg:sticky lg:top-28 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto lg:pr-1"
+  aria-label={f.title}
+>
+  <form data-filter-form class="space-y-8">
+    <!-- Mobile sheet header; hidden once the panel is a sidebar -->
+    <div class="flex items-center justify-between lg:hidden">
+      <h2 class="type-heading text-ink">{f.title}</h2>
+      <button
+        type="button"
+        data-filter-close
+        class="icon-btn"
+        aria-label={f.close}
+      >
+        <FiX className="h-5 w-5" aria-hidden="true" />
+      </button>
+    </div>
+
+    <div class="hidden items-center justify-between lg:flex">
+      <h2 class="type-label text-muted">{f.title}</h2>
+      <button
+        type="button"
+        data-filter-clear
+        class="press text-xs font-semibold text-secondary hover:underline"
+      >
+        {f.clear}
+      </button>
+    </div>
+
+    {
+      groups.map(({ key, label, options }) => (
+        <fieldset class="border-t border-line pt-6">
+          <legend class="type-label mb-4 text-ink">{label}</legend>
+
+          <ul class="space-y-1">
+            {options.map(({ id, name, count }) => (
+              <li>
+                <label
+                  class:list={[
+                    "flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm transition-colors duration-200",
+                    count === 0
+                      ? "cursor-not-allowed opacity-40"
+                      : "hover:bg-panelAlt",
+                  ]}
+                >
+                  <input
+                    type="checkbox"
+                    name={key}
+                    value={id}
+                    disabled={count === 0}
+                    class="filter-check"
+                  />
+                  <span class="flex-1 text-ink">{name}</span>
+                  <span class="text-xs tabular-nums text-faint">{count}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </fieldset>
+      ))
+    }
+
+    <!-- Colour is grouped by construction family so the swatches read in context -->
+    <fieldset class="border-t border-line pt-6">
+      <legend class="type-label mb-4 text-ink">{f.color}</legend>
+
+      <div class="space-y-5">
+        {
+          CABINET_FINISHES.map((finish) => (
+            <div>
+              <p class="mb-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-faint">
+                {i18n.finishes.tabs[finish]}
+              </p>
+
+              <ul class="flex flex-wrap gap-1.5">
+                {CABINET_COLORS[finish].map(({ id, name, swatch }) => {
+                  const count = counts.color[id] ?? 0;
+                  return (
+                    <li>
+                      <label
+                        title={`${name} (${count})`}
+                        class:list={[
+                          "swatch-label",
+                          count === 0 && "pointer-events-none opacity-30",
+                        ]}
+                      >
+                        <input
+                          type="checkbox"
+                          name="color"
+                          value={id}
+                          disabled={count === 0}
+                          class="sr-only"
+                        />
+                        <span
+                          class="swatch-dot"
+                          style={`background-color:${swatch}`}
+                          aria-hidden="true"
+                        />
+                        <span class="sr-only">{name}</span>
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <div class="flex gap-3 border-t border-line pt-6 lg:hidden">
+      <button type="button" data-filter-clear class="btn btn-outline flex-1">
+        {f.clear}
+      </button>
+      <button type="button" data-filter-close class="btn btn-solid flex-1">
+        {f.apply}
+      </button>
+    </div>
+  </form>
+</aside>
+
+<style>
+  .filter-check {
+    height: 1.05rem;
+    width: 1.05rem;
+    flex-shrink: 0;
+    appearance: none;
+    cursor: pointer;
+    border-radius: 0.35rem;
+    border: 1px solid var(--line-strong);
+    background-color: var(--panel);
+    transition:
+      background-color 180ms var(--ease-standard),
+      border-color 180ms var(--ease-standard),
+      transform 140ms var(--ease-out-soft);
+  }
+
+  .filter-check:active {
+    transform: scale(0.9);
+  }
+
+  .filter-check:checked {
+    border-color: var(--secondary);
+    background-color: var(--secondary);
+    /* Inline mark keeps the control to a single element and one repaint */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%231b0f07' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8.5 6.5 12 13 4.5'/%3E%3C/svg%3E");
+    background-size: 82%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .swatch-label {
+    display: block;
+    cursor: pointer;
+    border-radius: 9999px;
+    padding: 2px;
+    border: 1.5px solid transparent;
+    transition:
+      border-color 180ms var(--ease-standard),
+      transform 140ms var(--ease-out-soft);
+  }
+
+  .swatch-label:hover {
+    transform: scale(1.08);
+  }
+
+  .swatch-label:active {
+    transform: scale(0.94);
+  }
+
+  .swatch-dot {
+    display: block;
+    height: 1.4rem;
+    width: 1.4rem;
+    border-radius: 9999px;
+    border: 1px solid var(--line);
+  }
+
+  .swatch-label:has(:checked) {
+    border-color: var(--secondary);
+  }
+
+  .swatch-label:has(:focus-visible) {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+  }
+</style>

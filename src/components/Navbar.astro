@@ -1,0 +1,301 @@
+---
+import { Image } from "astro:assets";
+import { FiMenu, FiX } from "react-icons/fi";
+
+import logo from "@/assets/logo.png";
+import ThemeToggle from "@/components/shared/ThemeToggle.astro";
+import LangToggle from "@/components/shared/LangToggle.astro";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+import { NAV_ALL, NAV_LEFT, NAV_RIGHT, type RouteKey } from "@/i18n/ui";
+import { activeRouteKey, usePath } from "@/i18n/utils";
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+const path = usePath(lang);
+const active = activeRouteKey(Astro.url, lang);
+
+const link = (key: RouteKey) => ({
+  key,
+  href: path(key),
+  label: i18n.nav[key],
+  isActive: key === active,
+});
+
+const left = NAV_LEFT.map(link);
+const right = NAV_RIGHT.map(link);
+const all = NAV_ALL.map(link);
+---
+
+<header
+  data-header
+  class="fixed inset-x-0 top-0 z-50 transition-shadow duration-300 ease-out"
+>
+  {/* The bar is a translucent material; content scrolls underneath it. */}
+  <div
+    class="chrome-blur border-b border-line/70 transition-colors duration-300 ease-out"
+  >
+    <nav
+      class="container-x flex h-20 items-center justify-between gap-4 lg:h-24"
+      aria-label={i18n.nav.menu}
+    >
+      {/* Left cluster — desktop */}
+      <ul class="hidden flex-1 items-center gap-1 lg:flex">
+        {
+          left.map(({ href, label, isActive }) => (
+            <li>
+              <a
+                href={href}
+                aria-current={isActive ? "page" : undefined}
+                class:list={[
+                  "nav-link press",
+                  isActive && "nav-link--active",
+                ]}
+              >
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      {/* Mobile: trigger on the left keeps the logo optically centred */}
+      <button
+        type="button"
+        data-menu-open
+        class="icon-btn lg:hidden"
+        aria-label={i18n.nav.menu}
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <FiMenu className="h-5 w-5" aria-hidden="true" />
+      </button>
+
+      {/* Centre — the mark anchors the whole header */}
+      <a
+        href={path("index")}
+        class="press-soft shrink-0 lg:mx-6"
+        aria-label={`${i18n.nav.index} — Modul Woods`}
+      >
+        <Image
+          src={logo}
+          alt="Modul Woods"
+          width={168}
+          height={48}
+          densities={[1, 2]}
+          loading="eager"
+          class="h-9 w-auto object-contain lg:h-11 dark:brightness-0 dark:invert"
+        />
+      </a>
+
+      {/* Right cluster — desktop */}
+      <ul class="hidden flex-1 items-center justify-end gap-1 lg:flex">
+        {
+          right.map(({ href, label, isActive }) => (
+            <li>
+              <a
+                href={href}
+                aria-current={isActive ? "page" : undefined}
+                class:list={[
+                  "nav-link press",
+                  isActive && "nav-link--active",
+                ]}
+              >
+                {label}
+              </a>
+            </li>
+          ))
+        }
+        <li class="ml-3 flex items-center gap-2">
+          <LangToggle label={i18n.nav.language} />
+          <ThemeToggle label={i18n.nav.theme} />
+        </li>
+      </ul>
+
+      {/* Mobile right — theme only; language lives in the sheet */}
+      <ThemeToggle label={i18n.nav.theme} class="lg:hidden" />
+    </nav>
+  </div>
+</header>
+
+{/* ---------------------------------------------------------------- sheet -- */}
+<div
+  id="mobile-menu"
+  data-menu-panel
+  class="pointer-events-none fixed inset-0 z-60 lg:hidden"
+  aria-hidden="true"
+>
+  {/* Dimming scrim: this is a modal task, so the page behind recedes */}
+  <div
+    data-menu-scrim
+    class="absolute inset-0 bg-baseBlack/45 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 ease-out"
+  >
+  </div>
+
+  <div
+    data-menu-sheet
+    role="dialog"
+    aria-modal="true"
+    aria-label={i18n.nav.menu}
+    class="absolute inset-y-0 left-0 flex w-[min(21rem,86vw)] -translate-x-full flex-col bg-canvas shadow-e3 transition-transform duration-[320ms] will-change-transform"
+    style="transition-timing-function: var(--ease-out-soft)"
+  >
+    <div class="flex h-20 items-center justify-between px-6 hairline-b">
+      <span class="type-label text-muted">{i18n.nav.menu}</span>
+      <button
+        type="button"
+        data-menu-close
+        class="icon-btn"
+        aria-label={i18n.nav.close}
+      >
+        <FiX className="h-5 w-5" aria-hidden="true" />
+      </button>
+    </div>
+
+    <ul class="flex flex-1 flex-col gap-1 overflow-y-auto p-4">
+      {
+        all.map(({ href, label, isActive }) => (
+          <li>
+            <a
+              href={href}
+              aria-current={isActive ? "page" : undefined}
+              class:list={[
+                "press flex items-center justify-between rounded-xl px-4 py-3.5 text-lg font-medium",
+                isActive
+                  ? "bg-panelAlt text-ink"
+                  : "text-muted hover:bg-panelAlt hover:text-ink",
+              ]}
+            >
+              {label}
+              {isActive && (
+                <span
+                  class="h-1.5 w-1.5 rounded-full bg-secondary"
+                  aria-hidden="true"
+                />
+              )}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="flex items-center justify-between gap-3 p-6 hairline-t">
+      <LangToggle label={i18n.nav.language} />
+      <a href={path("contact")} class="btn btn-primary text-[0.7rem]">
+        {i18n.common.getInTouch}
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    /* Slight positive tracking: this is small text on a translucent material */
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    position: relative;
+  }
+
+  .nav-link:hover {
+    color: var(--ink);
+    background-color: color-mix(in oklab, var(--ink) 6%, transparent);
+  }
+
+  .nav-link--active {
+    color: var(--ink);
+  }
+
+  /* The current page is marked by a dot under the label — quieter than a pill,
+     and it survives the translucent background without adding contrast noise. */
+  .nav-link--active::after {
+    content: "";
+    position: absolute;
+    bottom: 0.05rem;
+    left: 50%;
+    height: 3px;
+    width: 3px;
+    translate: -50% 0;
+    border-radius: 9999px;
+    background-color: var(--secondary);
+  }
+</style>
+
+<script>
+  const OPEN_CLASS = "is-open";
+
+  function initHeader() {
+    /* ---- scroll state: the material thickens once content is behind it --- */
+    const header = document.querySelector<HTMLElement>("[data-header]");
+
+    const onScroll = () => {
+      if (!header) return;
+      header.classList.toggle("shadow-e2", window.scrollY > 8);
+    };
+
+    window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    /* ---- mobile sheet ---------------------------------------------------- */
+    const panel = document.querySelector<HTMLElement>("[data-menu-panel]");
+    const sheet = panel?.querySelector<HTMLElement>("[data-menu-sheet]");
+    const scrim = panel?.querySelector<HTMLElement>("[data-menu-scrim]");
+    const trigger = document.querySelector<HTMLElement>("[data-menu-open]");
+    if (!panel || !sheet || !scrim || !trigger) return;
+
+    let isOpen = false;
+
+    const setOpen = (next: boolean) => {
+      if (next === isOpen) return;
+      isOpen = next;
+
+      panel.classList.toggle("pointer-events-none", !next);
+      panel.setAttribute("aria-hidden", String(!next));
+      trigger.setAttribute("aria-expanded", String(next));
+
+      scrim.classList.toggle("opacity-0", !next);
+      scrim.classList.toggle("opacity-100", next);
+
+      // Enter and exit travel the same path — in from the left, out to the left.
+      sheet.classList.toggle("-translate-x-full", !next);
+      sheet.classList.toggle("translate-x-0", next);
+
+      document.documentElement.style.overflow = next ? "hidden" : "";
+      panel.classList.toggle(OPEN_CLASS, next);
+
+      if (next) {
+        sheet.querySelector<HTMLElement>("a, button")?.focus({
+          preventScroll: true,
+        });
+      } else {
+        trigger.focus({ preventScroll: true });
+      }
+    };
+
+    trigger.addEventListener("click", () => setOpen(true));
+    scrim.addEventListener("click", () => setOpen(false));
+    panel
+      .querySelector("[data-menu-close]")
+      ?.addEventListener("click", () => setOpen(false));
+
+    // A tap on any destination closes the sheet before the navigation lands.
+    sheet.addEventListener("click", (event) => {
+      if ((event.target as Element).closest("a")) setOpen(false);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && isOpen) setOpen(false);
+    });
+  }
+
+  document.addEventListener("astro:page-load", initHeader);
+  document.addEventListener("astro:before-swap", () => {
+    document.documentElement.style.overflow = "";
+  });
+</script>

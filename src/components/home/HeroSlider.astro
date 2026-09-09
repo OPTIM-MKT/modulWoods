@@ -1,0 +1,338 @@
+---
+import { Image } from "astro:assets";
+import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+
+import kitchenHero from "@/assets/hero/misiones-kitchen-hero.jpeg";
+import premiumHero from "@/assets/hero/premium-hero-navy.jpeg";
+import hospitalityHero from "@/assets/hero/hospitality-hero-fluted.jpeg";
+import essentialHero from "@/assets/hero/essential-hero-green.jpeg";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+import { usePath } from "@/i18n/utils";
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+const path = usePath(lang);
+
+const { slides, cta_primary, cta_secondary, scroll } = i18n.home.hero;
+
+/** Photography order matches the copy order in the dictionary. */
+const media = [
+  { image: kitchenHero, position: "object-center" },
+  { image: premiumHero, position: "object-center" },
+  { image: hospitalityHero, position: "object-center" },
+  { image: essentialHero, position: "object-center" },
+];
+
+const items = slides.map((slide, index) => ({
+  ...slide,
+  ...media[index % media.length],
+}));
+---
+
+<section
+  data-hero
+  aria-roledescription="carousel"
+  aria-label={items[0]?.eyebrow}
+  class="relative isolate flex min-h-[38rem] flex-col justify-end overflow-hidden bg-baseBlack lg:min-h-[44rem]"
+>
+  <!-- Media stack: only opacity animates, so it stays on the compositor -->
+  <div class="absolute inset-0 -z-20">
+    {
+      items.map(({ image, position }, index) => (
+        <div
+          data-hero-media={index}
+          class:list={[
+            "absolute inset-0 transition-opacity duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+            index === 0 ? "opacity-100" : "opacity-0",
+          ]}
+        >
+          <Image
+            src={image}
+            alt=""
+            widths={[768, 1280, 1920]}
+            sizes="100vw"
+            loading={index === 0 ? "eager" : "lazy"}
+            fetchpriority={index === 0 ? "high" : "auto"}
+            class:list={[
+              "h-full w-full scale-[1.06] object-cover",
+              position,
+            ]}
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  <div
+    class="absolute inset-0 -z-10 bg-linear-to-t from-baseBlack/92 via-baseBlack/55 to-baseBlack/35"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="container-x relative pb-12 pt-36 lg:pb-16 lg:pt-44">
+    <div class="grid min-h-[17rem] max-w-3xl content-end">
+      {
+        items.map(({ eyebrow, title, subtitle }, index) => (
+          <article
+            data-hero-slide={index}
+            aria-hidden={index !== 0 ? "true" : undefined}
+            class:list={[
+              "col-start-1 row-start-1 self-end transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              index === 0
+                ? "translate-y-0 opacity-100"
+                : "pointer-events-none translate-y-5 opacity-0",
+            ]}
+          >
+            <p class="type-eyebrow flex items-center gap-3 text-secondary">
+              <span class="h-px w-10 bg-secondary/70" aria-hidden="true" />
+              {eyebrow}
+            </p>
+            <h1 class="type-display mt-5 text-white">{title}</h1>
+            <p class="type-body mt-5 max-w-xl text-white/75 sm:text-lg">
+              {subtitle}
+            </p>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="mt-9 flex flex-wrap items-center gap-3">
+      <a href={path("products")} class="btn btn-primary group">
+        {cta_primary}
+        <FiArrowRight
+          className="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1"
+          aria-hidden="true"
+        />
+      </a>
+      <a href={path("contact")} class="btn btn-glass">{cta_secondary}</a>
+    </div>
+
+    <!-- Controls -->
+    <div class="mt-12 flex items-center gap-4 border-t border-white/12 pt-6">
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          data-hero-prev
+          aria-label={i18n.common.previous}
+          class="icon-btn border-white/25 text-white hover:bg-white/12"
+        >
+          <FiChevronLeft className="h-5 w-5" aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          data-hero-next
+          aria-label={i18n.common.next}
+          class="icon-btn border-white/25 text-white hover:bg-white/12"
+        >
+          <FiChevronRight className="h-5 w-5" aria-hidden="true" />
+        </button>
+      </div>
+
+      <ul class="flex items-center gap-2" role="tablist">
+        {
+          items.map(({ eyebrow }, index) => (
+            <li role="presentation">
+              <button
+                type="button"
+                role="tab"
+                data-hero-dot={index}
+                aria-label={eyebrow}
+                aria-selected={index === 0 ? "true" : "false"}
+                class:list={[
+                  "hero-dot",
+                  index === 0 && "hero-dot--active",
+                ]}
+              >
+                <span class="hero-dot__fill" aria-hidden="true" />
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+
+      <span class="type-label ml-auto hidden text-white/45 sm:block">
+        {scroll}
+      </span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-dot {
+    position: relative;
+    display: block;
+    height: 3px;
+    width: 1.5rem;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 9999px;
+    background-color: rgb(255 255 255 / 0.28);
+    transition: width 500ms var(--ease-out-soft);
+  }
+
+  .hero-dot:hover {
+    background-color: rgb(255 255 255 / 0.5);
+  }
+
+  .hero-dot--active {
+    width: 3.5rem;
+  }
+
+  /* The fill doubles as the autoplay progress bar — the interface tells you
+     where it is going before it gets there. */
+  .hero-dot__fill {
+    position: absolute;
+    inset: 0;
+    transform-origin: left center;
+    scale: 0 1;
+    border-radius: inherit;
+    background-color: var(--secondary);
+  }
+
+  .hero-dot--active .hero-dot__fill {
+    animation: hero-progress var(--hero-duration, 6500ms) linear forwards;
+  }
+
+  @keyframes hero-progress {
+    from {
+      scale: 0 1;
+    }
+    to {
+      scale: 1 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-dot--active .hero-dot__fill {
+      animation: none;
+      scale: 1 1;
+    }
+  }
+</style>
+
+<script>
+  const AUTOPLAY_MS = 6500;
+  const SWIPE_THRESHOLD = 48;
+
+  let timer: ReturnType<typeof setTimeout> | undefined;
+
+  function initHero() {
+    const root = document.querySelector<HTMLElement>("[data-hero]");
+    if (!root) return;
+
+    const slides = [...root.querySelectorAll<HTMLElement>("[data-hero-slide]")];
+    const media = [...root.querySelectorAll<HTMLElement>("[data-hero-media]")];
+    const dots = [...root.querySelectorAll<HTMLElement>("[data-hero-dot]")];
+    if (slides.length < 2) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let index = 0;
+
+    const render = () => {
+      slides.forEach((slide, i) => {
+        const active = i === index;
+        slide.classList.toggle("opacity-100", active);
+        slide.classList.toggle("translate-y-0", active);
+        slide.classList.toggle("opacity-0", !active);
+        slide.classList.toggle("translate-y-5", !active);
+        slide.classList.toggle("pointer-events-none", !active);
+        slide.toggleAttribute("aria-hidden", !active);
+      });
+
+      media.forEach((layer, i) => {
+        layer.classList.toggle("opacity-100", i === index);
+        layer.classList.toggle("opacity-0", i !== index);
+      });
+
+      dots.forEach((dot, i) => {
+        const active = i === index;
+        dot.setAttribute("aria-selected", String(active));
+        // Re-adding the class restarts the progress animation from zero.
+        dot.classList.remove("hero-dot--active");
+        if (active) {
+          void dot.offsetWidth;
+          dot.classList.add("hero-dot--active");
+        }
+      });
+    };
+
+    const go = (next: number) => {
+      index = (next + slides.length) % slides.length;
+      render();
+      play();
+    };
+
+    const stop = () => {
+      if (timer) clearTimeout(timer);
+      timer = undefined;
+    };
+
+    const play = () => {
+      stop();
+      if (reduced.matches) return;
+      timer = setTimeout(() => go(index + 1), AUTOPLAY_MS);
+    };
+
+    root.querySelector("[data-hero-next]")?.addEventListener("click", () =>
+      go(index + 1),
+    );
+    root.querySelector("[data-hero-prev]")?.addEventListener("click", () =>
+      go(index - 1),
+    );
+    dots.forEach((dot, i) => dot.addEventListener("click", () => go(i)));
+
+    // Pause while the pointer rests on the hero, or while the tab is hidden.
+    root.addEventListener("pointerenter", stop);
+    root.addEventListener("pointerleave", play);
+    root.addEventListener("focusin", stop);
+    root.addEventListener("focusout", play);
+
+    // Horizontal swipe: commit on the sign of the gesture, not on where it ends.
+    let startX = 0;
+    let startY = 0;
+    let tracking = false;
+
+    root.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (event.pointerType === "mouse") return;
+        startX = event.clientX;
+        startY = event.clientY;
+        tracking = true;
+        stop();
+      },
+      { passive: true },
+    );
+
+    root.addEventListener(
+      "pointerup",
+      (event) => {
+        if (!tracking) return;
+        tracking = false;
+        const dx = event.clientX - startX;
+        const dy = event.clientY - startY;
+        // Ignore anything that reads as a vertical scroll.
+        if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+          go(dx < 0 ? index + 1 : index - 1);
+        } else {
+          play();
+        }
+      },
+      { passive: true },
+    );
+
+    document.addEventListener("visibilitychange", () =>
+      document.hidden ? stop() : play(),
+    );
+
+    root.style.setProperty("--hero-duration", `${AUTOPLAY_MS}ms`);
+    render();
+  }
+
+  document.addEventListener("astro:page-load", initHero);
+  document.addEventListener("astro:before-swap", () => {
+    if (timer) clearTimeout(timer);
+    timer = undefined;
+  });
+</script>

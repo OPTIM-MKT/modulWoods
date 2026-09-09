@@ -1,0 +1,59 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/shared/PageHero.astro";
+import Gallery from "@/components/shared/Gallery.astro";
+import FeatureList from "@/components/shared/FeatureList.astro";
+import CtaSection from "@/components/shared/CtaSection.astro";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+import { usePath } from "@/i18n/utils";
+
+interface Props {
+  /** Dictionary section — both pages share the exact same copy shape. */
+  section: "kitchens" | "closets";
+  /** Folder inside `src/assets/` that holds this page's photography. */
+  gallery: string;
+}
+
+const { section, gallery } = Astro.props;
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+const path = usePath(lang);
+
+const copy = i18n[section];
+const seo = i18n.seo.pages[section];
+---
+
+<Layout title={seo.title} description={seo.description}>
+  <PageHero
+    eyebrow={copy.eyebrow}
+    title={copy.title}
+    subtitle={copy.subtitle}
+    description={copy.description}
+  >
+    <FeatureList items={copy.features} variant="pills" class="mt-8" />
+  </PageHero>
+
+  <section class="section-y">
+    <div class="container-x">
+      <Gallery
+        name={gallery}
+        eyebrow={i18n.common.gallery}
+        title={copy.galleryTitle}
+        layout="mosaic"
+        class="reveal"
+      />
+    </div>
+  </section>
+
+  <CtaSection
+    eyebrow={copy.cta.eyebrow}
+    title={copy.cta.title}
+    description={copy.cta.description}
+    primaryLabel={copy.cta.primary}
+    primaryHref={path("contact")}
+    secondaryLabel={copy.cta.secondary}
+    secondaryHref={path("products")}
+  />
+</Layout>

@@ -1,0 +1,174 @@
+---
+import { Image } from "astro:assets";
+import {
+  FiArrowUpRight,
+  FiFacebook,
+  FiInstagram,
+  FiLinkedin,
+  FiMail,
+  FiMapPin,
+  FiPhone,
+} from "react-icons/fi";
+
+import logo from "@/assets/logo.png";
+import { getI18N, getLang } from "@/i18n/i18n";
+import { NAV_ALL, type RouteKey } from "@/i18n/ui";
+import { usePath } from "@/i18n/utils";
+import { CONTACT, SITE } from "@/constants/site";
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+const path = usePath(lang);
+
+const explore: RouteKey[] = ["products", "kitchens", "closets", "finishes"];
+const company: RouteKey[] = NAV_ALL.filter((key) => !explore.includes(key));
+
+const socials = [
+  { href: CONTACT.social.instagram, label: "Instagram", Icon: FiInstagram },
+  { href: CONTACT.social.facebook, label: "Facebook", Icon: FiFacebook },
+  { href: CONTACT.social.linkedin, label: "LinkedIn", Icon: FiLinkedin },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-primary text-onPrimary">
+  <div class="container-x py-16 lg:py-20">
+    <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+      <!-- Brand -->
+      <div class="max-w-sm">
+        <Image
+          src={logo}
+          alt="Modul Woods"
+          width={168}
+          height={48}
+          densities={[1, 2]}
+          loading="lazy"
+          class="h-10 w-auto object-contain brightness-0 invert"
+        />
+        <p class="type-body mt-5 text-onPrimary/70">{i18n.footer.tagline}</p>
+
+        <ul class="mt-6 flex items-center gap-2">
+          {
+            socials.map(({ href, label, Icon }) => (
+              <li>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  class="icon-btn border-onPrimary/20 text-onPrimary/80 hover:bg-onPrimary/10 hover:text-onPrimary"
+                >
+                  <Icon className="h-4 w-4" aria-hidden="true" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- Explore -->
+      <nav aria-label={i18n.footer.explore}>
+        <h2 class="type-label text-secondary">{i18n.footer.explore}</h2>
+        <ul class="mt-5 space-y-3">
+          {
+            explore.map((key) => (
+              <li>
+                <a
+                  href={path(key)}
+                  class="footer-link"
+                >
+                  {i18n.nav[key]}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <!-- Company -->
+      <nav aria-label={i18n.footer.company}>
+        <h2 class="type-label text-secondary">{i18n.footer.company}</h2>
+        <ul class="mt-5 space-y-3">
+          {
+            company.map((key) => (
+              <li>
+                <a href={path(key)} class="footer-link">
+                  {i18n.nav[key]}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a
+              href={SITE.catalog}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link inline-flex items-center gap-1.5"
+            >
+              {i18n.footer.catalog}
+              <FiArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Contact -->
+      <div>
+        <h2 class="type-label text-secondary">{i18n.footer.contact}</h2>
+        <ul class="mt-5 space-y-4 text-sm text-onPrimary/75">
+          <li class="flex gap-3">
+            <FiMapPin
+              className="mt-0.5 h-4 w-4 shrink-0 text-onPrimary/50"
+              aria-hidden="true"
+            />
+            <span>
+              {CONTACT.manufacturing}<br />{CONTACT.distribution}
+            </span>
+          </li>
+          <li class="flex gap-3">
+            <FiPhone
+              className="mt-0.5 h-4 w-4 shrink-0 text-onPrimary/50"
+              aria-hidden="true"
+            />
+            <span class="flex flex-col gap-1">
+              <a href={`tel:${CONTACT.telUS}`} class="footer-link"
+                >{CONTACT.tollFreeUS}</a
+              >
+              <a href={`tel:${CONTACT.telMX}`} class="footer-link"
+                >{CONTACT.tollFreeMX}</a
+              >
+            </span>
+          </li>
+          <li class="flex gap-3">
+            <FiMail
+              className="mt-0.5 h-4 w-4 shrink-0 text-onPrimary/50"
+              aria-hidden="true"
+            />
+            <a href={`mailto:${CONTACT.email}`} class="footer-link"
+              >{CONTACT.email}</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="mt-14 flex flex-col gap-3 border-t border-onPrimary/12 pt-7 text-xs text-onPrimary/55 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>&copy; {year} {SITE.name}. {i18n.footer.rights}</p>
+      <p>{i18n.footer.madeIn}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer-link {
+    color: color-mix(in oklab, var(--on-primary) 75%, transparent);
+    transition: color 200ms var(--ease-standard);
+  }
+
+  .footer-link:hover {
+    color: var(--secondary);
+  }
+</style>

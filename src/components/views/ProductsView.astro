@@ -1,0 +1,39 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/shared/PageHero.astro";
+import ProductsExplorer from "@/components/products/ProductsExplorer.astro";
+import CtaSection from "@/components/shared/CtaSection.astro";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+import { usePath } from "@/i18n/utils";
+import { getProducts } from "@/lib/products";
+import { SITE } from "@/constants/site";
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+const path = usePath(lang);
+
+const products = await getProducts(lang);
+const seo = i18n.seo.pages.products;
+---
+
+<Layout title={seo.title} description={seo.description}>
+  <PageHero
+    eyebrow={i18n.products.eyebrow}
+    title={i18n.products.subtitle}
+    description={i18n.products.description}
+  />
+
+  <ProductsExplorer products={products} />
+
+  <CtaSection
+    eyebrow={i18n.home.cta.eyebrow}
+    title={i18n.home.cta.title}
+    description={i18n.home.cta.description}
+    primaryLabel={i18n.home.cta.primary}
+    primaryHref={path("contact")}
+    secondaryLabel={i18n.home.cta.secondary}
+    secondaryHref={SITE.catalog}
+    secondaryExternal
+  />
+</Layout>

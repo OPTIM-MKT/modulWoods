@@ -1,0 +1,80 @@
+---
+import kitchenWide from "@/assets/Kitchens/cocina-frontal.jpg.jpeg";
+import kitchenDetail from "@/assets/Kitchens/kitchen-detail-open.jpg.jpeg";
+import closetWide from "@/assets/closets/closet-ambientado.jpg.jpeg";
+import closetDetail from "@/assets/closets/closet-abierto.jpg.jpeg";
+
+import Layout from "@/layouts/Layout.astro";
+import HeroSlider from "@/components/home/HeroSlider.astro";
+import IntroSection from "@/components/home/IntroSection.astro";
+import ShowcaseSection from "@/components/home/ShowcaseSection.astro";
+import LinesSection from "@/components/home/LinesSection.astro";
+import CtaSection from "@/components/shared/CtaSection.astro";
+import FeatureList from "@/components/shared/FeatureList.astro";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+import { usePath } from "@/i18n/utils";
+import { countByCategory, getProducts } from "@/lib/products";
+import { SITE } from "@/constants/site";
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+const path = usePath(lang);
+
+const counts = countByCategory(await getProducts(lang));
+---
+
+<Layout bleed>
+  <HeroSlider />
+
+  <IntroSection />
+
+  <ShowcaseSection
+    eyebrow={i18n.home.kitchens.eyebrow}
+    title={i18n.home.kitchens.title}
+    description={i18n.home.kitchens.description}
+    ctaLabel={i18n.home.kitchens.cta}
+    ctaHref={path("kitchens")}
+    image={kitchenWide}
+    imageAlt={i18n.kitchens.title}
+    inset={kitchenDetail}
+    media="right"
+  >
+    <FeatureList
+      items={i18n.kitchens.features}
+      variant="pills"
+      class="mt-7"
+    />
+  </ShowcaseSection>
+
+  <LinesSection counts={counts} />
+
+  <ShowcaseSection
+    eyebrow={i18n.home.closets.eyebrow}
+    title={i18n.home.closets.title}
+    description={i18n.home.closets.description}
+    ctaLabel={i18n.home.closets.cta}
+    ctaHref={path("closets")}
+    image={closetWide}
+    imageAlt={i18n.closets.title}
+    inset={closetDetail}
+    media="left"
+  >
+    <FeatureList
+      items={i18n.closets.features}
+      variant="pills"
+      class="mt-7"
+    />
+  </ShowcaseSection>
+
+  <CtaSection
+    eyebrow={i18n.home.cta.eyebrow}
+    title={i18n.home.cta.title}
+    description={i18n.home.cta.description}
+    primaryLabel={i18n.home.cta.primary}
+    primaryHref={path("contact")}
+    secondaryLabel={i18n.home.cta.secondary}
+    secondaryHref={SITE.catalog}
+    secondaryExternal
+  />
+</Layout>

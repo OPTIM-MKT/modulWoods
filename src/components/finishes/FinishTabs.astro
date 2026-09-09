@@ -1,0 +1,163 @@
+---
+import SwatchGrid from "./SwatchGrid.astro";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+import { CABINET_FINISHES, TOP_MATERIALS } from "@/constants/site";
+import { cabinetSwatches, topSwatches } from "@/lib/finishes";
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+
+/**
+ * Four tabs: the three cabinet construction families, then vanity tops — which
+ * is itself split into its three materials.
+ */
+const tabs = [
+  ...CABINET_FINISHES.map((id) => ({
+    id: id as string,
+    label: i18n.finishes.tabs[id],
+    groups: [{ title: undefined, swatches: cabinetSwatches(id) }],
+  })),
+  {
+    id: "vanityTops",
+    label: i18n.finishes.tabs.vanityTops,
+    groups: TOP_MATERIALS.map((material) => ({
+      title: i18n.finishes.groups[material],
+      swatches: topSwatches(material),
+    })),
+  },
+];
+---
+
+<section class="section-y" data-finish-tabs>
+  <div class="container-x">
+    <!-- Tab bar: a translucent rail with one indicator sliding behind the labels -->
+    <div
+      role="tablist"
+      aria-label={i18n.finishes.title}
+      class="relative mx-auto flex w-fit max-w-full items-center gap-1 overflow-x-auto rounded-full border border-line bg-panel/70 p-1 backdrop-blur-lg"
+    >
+      <span
+        data-tab-indicator
+        class="pointer-events-none absolute left-0 top-1 h-[calc(100%-0.5rem)] rounded-full bg-ink transition-[transform,width] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+        aria-hidden="true"
+      >
+      </span>
+
+      {
+        tabs.map(({ id, label }, index) => (
+          <button
+            type="button"
+            role="tab"
+            id={`tab-${id}`}
+            data-tab={id}
+            aria-controls={`panel-${id}`}
+            aria-selected={index === 0 ? "true" : "false"}
+            tabindex={index === 0 ? 0 : -1}
+            class="relative z-10 shrink-0 cursor-pointer whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-300 aria-selected:text-canvas aria-[selected=false]:text-muted aria-[selected=false]:hover:text-ink"
+          >
+            {label}
+          </button>
+        ))
+      }
+    </div>
+
+    <p class="mx-auto mt-6 max-w-xl text-center text-xs text-faint">
+      {i18n.finishes.note}
+    </p>
+
+    <div class="mt-12">
+      {
+        tabs.map(({ id, groups }, index) => (
+          <div
+            id={`panel-${id}`}
+            role="tabpanel"
+            data-panel={id}
+            aria-labelledby={`tab-${id}`}
+            hidden={index !== 0}
+            class="space-y-12"
+          >
+            {groups.map(({ title, swatches }) => (
+              <SwatchGrid swatches={swatches} title={title} animate />
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  function initFinishTabs() {
+    const root = document.querySelector<HTMLElement>("[data-finish-tabs]");
+    if (!root) return;
+
+    const tabs = [...root.querySelectorAll<HTMLElement>("[data-tab]")];
+    const panels = [...root.querySelectorAll<HTMLElement>("[data-panel]")];
+    const indicator = root.querySelector<HTMLElement>("[data-tab-indicator]");
+    if (!tabs.length) return;
+
+    /** The pill tracks the active label instead of each tab owning a background. */
+    const moveIndicator = (tab: HTMLElement) => {
+      if (!indicator) return;
+      indicator.style.width = `${tab.offsetWidth}px`;
+      indicator.style.transform = `translateX(${tab.offsetLeft}px)`;
+    };
+
+    const select = (id: string, { focus = false } = {}) => {
+      tabs.forEach((tab) => {
+        const active = tab.dataset.tab === id;
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+        if (active) {
+          moveIndicator(tab);
+          if (focus) tab.focus();
+        }
+      });
+
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.panel !== id;
+      });
+
+      // Deep-linkable: /finishes#thermofoil opens straight on that tab.
+      const url = new URL(location.href);
+      url.hash = id;
+      history.replaceState(null, "", url);
+    };
+
+    tabs.forEach((tab) =>
+      tab.addEventListener("click", () => select(tab.dataset.tab!)),
+    );
+
+    // Roving tabindex — arrow keys move between tabs, as the pattern expects.
+    root.addEventListener("keydown", (event) => {
+      const index = tabs.indexOf(document.activeElement as HTMLElement);
+      if (index === -1) return;
+
+      const step =
+        event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+      if (!step) return;
+
+      event.preventDefault();
+      select(tabs[(index + step + tabs.length) % tabs.length].dataset.tab!, {
+        focus: true,
+      });
+    });
+
+    const fromHash = location.hash.slice(1);
+    const initial = tabs.find((tab) => tab.dataset.tab === fromHash) ?? tabs[0];
+    select(initial.dataset.tab!);
+
+    const active = () =>
+      tabs.find((tab) => tab.getAttribute("aria-selected") === "true") ?? tabs[0];
+
+    // Font loading and image decoding shift widths — re-measure once settled.
+    requestAnimationFrame(() => moveIndicator(active()));
+
+    const onResize = () => moveIndicator(active());
+    window.removeEventListener("resize", onResize);
+    window.addEventListener("resize", onResize, { passive: true });
+  }
+
+  document.addEventListener("astro:page-load", initFinishTabs);
+</script>

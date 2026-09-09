@@ -1,0 +1,150 @@
+---
+import {
+  FiFacebook,
+  FiInstagram,
+  FiLinkedin,
+  FiMail,
+  FiMapPin,
+  FiPhone,
+} from "react-icons/fi";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+import { CONTACT } from "@/constants/site";
+
+const lang = getLang(Astro.currentLocale);
+const info = getI18N(lang).contact.info;
+
+const channels = [
+  {
+    Icon: FiPhone,
+    label: info.phoneUS,
+    value: CONTACT.tollFreeUS,
+    href: `tel:${CONTACT.telUS}`,
+  },
+  {
+    Icon: FiPhone,
+    label: info.phoneMX,
+    value: CONTACT.tollFreeMX,
+    href: `tel:${CONTACT.telMX}`,
+  },
+  {
+    Icon: FiMail,
+    label: info.email,
+    value: CONTACT.email,
+    href: `mailto:${CONTACT.email}`,
+  },
+];
+
+const places = [
+  { label: info.manufacturing, value: CONTACT.manufacturing },
+  { label: info.distribution, value: CONTACT.distribution },
+];
+
+const socials = [
+  { href: CONTACT.social.instagram, label: "Instagram", Icon: FiInstagram },
+  { href: CONTACT.social.facebook, label: "Facebook", Icon: FiFacebook },
+  { href: CONTACT.social.linkedin, label: "LinkedIn", Icon: FiLinkedin },
+];
+---
+
+<div class="reveal space-y-10">
+  <!-- Direct channels -->
+  <div>
+    <h2 class="type-label text-muted">{info.title}</h2>
+
+    <ul class="mt-5 space-y-2">
+      {
+        channels.map(({ Icon, label, value, href }) => (
+          <li>
+            <a
+              href={href}
+              class="press group flex items-center gap-4 rounded-xl border border-transparent px-3 py-3 -mx-3 hover:border-line hover:bg-panel"
+            >
+              <span
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary/12 text-secondary"
+                aria-hidden="true"
+              >
+                <Icon className="h-4 w-4" />
+              </span>
+
+              <span class="min-w-0">
+                <span class="block text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-faint">
+                  {label}
+                </span>
+                <span class="block truncate text-[0.95rem] font-medium text-ink group-hover:text-secondary">
+                  {value}
+                </span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <!-- Locations -->
+  <div class="border-t border-line pt-8">
+    <ul class="space-y-5">
+      {
+        places.map(({ label, value }) => (
+          <li class="flex gap-4">
+            <span
+              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-panelAlt text-muted"
+              aria-hidden="true"
+            >
+              <FiMapPin className="h-4 w-4" />
+            </span>
+            <span>
+              <span class="block text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-faint">
+                {label}
+              </span>
+              <span class="block text-[0.95rem] text-ink">{value}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <!-- Hours -->
+  <div class="border-t border-line pt-8">
+    <h2 class="type-label text-muted">{info.hoursTitle}</h2>
+
+    <dl class="mt-5 space-y-3 text-sm">
+      {
+        CONTACT.hours.map(({ days, time }) => (
+          <div class="flex items-baseline justify-between gap-4">
+            <dt class="text-muted">{info.hours[days]}</dt>
+            <dd class="border-b border-dashed border-line flex-1" aria-hidden="true" />
+            <dd class="shrink-0 font-medium tabular-nums text-ink">
+              {time === "closed" ? info.closed : time}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+
+  <!-- Social -->
+  <div class="border-t border-line pt-8">
+    <h2 class="type-label text-muted">{info.socialTitle}</h2>
+
+    <ul class="mt-5 flex items-center gap-2">
+      {
+        socials.map(({ href, label, Icon }) => (
+          <li>
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              class="icon-btn bg-panel hover:bg-panelAlt"
+            >
+              <Icon className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,124 @@
+---
+import { Image } from "astro:assets";
+import { FiArrowRight } from "react-icons/fi";
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+  ctaLabel: string;
+  ctaHref: string;
+  image: ImageMetadata;
+  imageAlt: string;
+  /** A second frame that overlaps the first, offset for depth. */
+  inset?: ImageMetadata;
+  insetAlt?: string;
+  /** Which side the photography sits on. Alternate down the page. */
+  media?: "left" | "right";
+  /** Tints the section so consecutive showcases don't merge into one block. */
+  tone?: "canvas" | "panel";
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  ctaLabel,
+  ctaHref,
+  image,
+  imageAlt,
+  inset,
+  insetAlt = "",
+  media = "right",
+  tone = "canvas",
+  class: className = "",
+} = Astro.props;
+---
+
+<section
+  class:list={[
+    "section-y",
+    tone === "panel" ? "bg-panelAlt/45" : "bg-canvas",
+    className,
+  ]}
+>
+  <div class="container-x">
+    <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <!-- Media -->
+      <div
+        class:list={[
+          "reveal relative",
+          media === "left" ? "lg:order-1" : "lg:order-2",
+          inset && "pb-16 sm:pb-20 lg:pb-24",
+        ]}
+      >
+        <div
+          class="overflow-hidden rounded-[1.5rem] bg-panelAlt shadow-e2"
+        >
+          <Image
+            src={image}
+            alt={imageAlt}
+            widths={[560, 900, 1400]}
+            sizes="(min-width: 1024px) 46vw, 92vw"
+            loading="lazy"
+            class="aspect-4/3 h-full w-full object-cover"
+          />
+        </div>
+
+        {
+          inset && (
+            <div
+              class:list={[
+                "absolute bottom-0 w-[46%] overflow-hidden rounded-[1.25rem] border-4 border-canvas bg-panelAlt shadow-e3",
+                media === "left" ? "right-4 lg:right-8" : "left-4 lg:left-8",
+              ]}
+            >
+              <Image
+                src={inset}
+                alt={insetAlt}
+                widths={[320, 640]}
+                sizes="(min-width: 1024px) 22vw, 44vw"
+                loading="lazy"
+                class="aspect-square h-full w-full object-cover"
+              />
+            </div>
+          )
+        }
+      </div>
+
+      <!-- Copy -->
+      <div
+        class:list={[
+          "reveal max-w-xl",
+          media === "left" ? "lg:order-2" : "lg:order-1",
+        ]}
+        style="transition-delay:100ms"
+      >
+        <p class="type-eyebrow flex items-center gap-3 text-secondary">
+          <span class="h-px w-8 bg-secondary/60" aria-hidden="true"></span>
+          {eyebrow}
+        </p>
+
+        <h2 class="type-title mt-4 text-ink">{title}</h2>
+        <p class="type-body mt-5 text-muted">{description}</p>
+
+        <slot />
+
+        <a href={ctaHref} class="group mt-8 inline-flex items-center gap-2.5">
+          <span
+            class="text-sm font-semibold tracking-[0.06em] text-ink underline-offset-[6px] group-hover:underline"
+          >
+            {ctaLabel}
+          </span>
+          <span
+            class="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/12 text-secondary transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1"
+            aria-hidden="true"
+          >
+            <FiArrowRight className="h-4 w-4" />
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

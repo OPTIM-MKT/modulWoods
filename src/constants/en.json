@@ -1,0 +1,318 @@
+{
+  "seo": {
+    "title": "Modul Woods — Premium Vanity & Kitchen Cabinets",
+    "description": "Premium quality vanity & kitchen cabinets for residential, hospitality and multi-family projects. Manufacturing in Monterrey, MX. Distribution in Laredo, TX.",
+    "pages": {
+      "about": {
+        "title": "About us — Modul Woods",
+        "description": "From cultured marble vanity tops in 2004 to a full frameless cabinetry division today. The story behind Modul Woods."
+      },
+      "kitchens": {
+        "title": "Kitchen cabinets — Modul Woods",
+        "description": "Complete frameless kitchen cabinetry: base and tall units, islands, glass-front uppers and interior storage, in standard and ADA-compliant layouts."
+      },
+      "closets": {
+        "title": "Custom closets — Modul Woods",
+        "description": "Frameless closet systems with hanging rods, adjustable shelving and custom drawer banks, built to the exact dimensions of every room."
+      },
+      "finishes": {
+        "title": "Finishes & materials — Modul Woods",
+        "description": "Painted, laminated and thermofoil cabinet finishes, plus quartz, cultured marble and cultured granite vanity tops."
+      },
+      "products": {
+        "title": "Collections — Modul Woods",
+        "description": "Thirty-six cabinet collections across our Hospitality, Premium and Essential lines. Filter by line, finish and colour."
+      },
+      "contact": {
+        "title": "Contact — Modul Woods",
+        "description": "Talk to our team about your next residential, hospitality or multi-family project."
+      }
+    }
+  },
+  "nav": {
+    "index": "Home",
+    "products": "Collections",
+    "kitchens": "Kitchens",
+    "closets": "Closets",
+    "finishes": "Finishes",
+    "about": "About",
+    "contact": "Contact",
+    "menu": "Menu",
+    "close": "Close",
+    "language": "Language",
+    "theme": "Toggle theme",
+    "skip": "Skip to content"
+  },
+  "common": {
+    "viewAll": "View all",
+    "learnMore": "Learn more",
+    "explore": "Explore",
+    "getInTouch": "Get in touch",
+    "requestQuote": "Request a quote",
+    "downloadCatalog": "Download catalog",
+    "backTo": "Back to collections",
+    "backToTop": "Back to top",
+    "previous": "Previous",
+    "next": "Next",
+    "loading": "Loading",
+    "gallery": "Gallery",
+    "openImage": "Open image"
+  },
+  "home": {
+    "hero": {
+      "slides": [
+        {
+          "eyebrow": "Kitchen cabinets",
+          "title": "Full kitchens, built to order.",
+          "subtitle": "Frameless base and tall units, islands and interior storage, finished with the countertop material of your choice."
+        },
+        {
+          "eyebrow": "Premium line",
+          "title": "Refined design, custom sizing.",
+          "subtitle": "Fifteen premium collections paired with quartz, cultured marble or cultured granite vanity tops."
+        },
+        {
+          "eyebrow": "Hospitality line",
+          "title": "Built for hotels and multi-family.",
+          "subtitle": "Engineered for durability across hotels, motels, assisted living and multi-family properties."
+        },
+        {
+          "eyebrow": "Essential line",
+          "title": "Style that fits every budget.",
+          "subtitle": "Gretta, Charleston, Denmark, Arizona and Berlin bring the Modul Woods look to every project."
+        }
+      ],
+      "cta_primary": "See collections",
+      "cta_secondary": "Talk to us",
+      "scroll": "Scroll to explore"
+    },
+    "intro": {
+      "eyebrow": "Since 2004",
+      "title": "A single manufacturing partner, from the cabinet to the countertop.",
+      "description": "Modul Woods manufactures frameless cabinetry for bathrooms, kitchens and closets — and the vanity tops that finish them. One shop, one lead time, one point of contact for residential, hospitality and multi-family projects.",
+      "stats": [
+        { "value": "400+", "label": "SKUs in production" },
+        { "value": "50+", "label": "Colors & finishes" },
+        { "value": "36", "label": "Cabinet collections" },
+        { "value": "95%", "label": "Produced for the US market" }
+      ]
+    },
+    "kitchens": {
+      "eyebrow": "Kitchens",
+      "title": "Integral kitchens that adapt to every need.",
+      "description": "Base and tall units, islands, glass-front uppers and interior storage — in standard designs as well as ADA-compliant layouts.",
+      "cta": "Explore kitchens"
+    },
+    "products": {
+      "eyebrow": "Collections",
+      "title": "Three lines. Thirty-six collections.",
+      "description": "Hospitality, Premium and Essential — every collection made to order in the size, finish and colour your project calls for.",
+      "cta": "Browse collections"
+    },
+    "closets": {
+      "eyebrow": "Closets",
+      "title": "Closets built around how you live.",
+      "description": "Hanging rods, adjustable shelving and custom drawer banks, tailored to the exact dimensions of every room.",
+      "cta": "Explore closets"
+    },
+    "cta": {
+      "eyebrow": "Start a project",
+      "title": "Tell us what you're building.",
+      "description": "Send us your specifications and our team will come back with sizing, finishes and lead times for your project.",
+      "primary": "Request a quote",
+      "secondary": "Download catalog"
+    }
+  },
+  "about-us": {
+    "eyebrow": "About us",
+    "title": "The beginning of Modul Woods.",
+    "content": [
+      "Modular Vanity Tops was founded in 2004, specializing in the manufacturing of high-quality cultured marble vanity tops. Over the years, we expanded our product portfolio to include additional vanity top styles and materials, continually evolving to meet the needs of our customers.",
+      "In 2018, we launched Modul Woods, our custom cabinetry division, extending our expertise beyond countertops to include premium vanity and kitchen cabinets. Today, we manufacture frameless cabinetry for bathrooms and kitchens, offering vanity cabinets, base and wall cabinets, tall pantry units, islands, and custom storage solutions.",
+      "Our products serve residential, hospitality, multifamily, senior living, and commercial projects, providing customers with a complete, coordinated solution from a single manufacturing partner. Whether supplying a single home or a large-scale hotel or multifamily development, we are committed to delivering exceptional craftsmanship, dependable quality, and innovative designs that bring every space to life."
+    ],
+    "stats": [
+      { "value": "2004", "label": "Founded as Modular Vanity Tops" },
+      { "value": "2018", "label": "Modul Woods cabinetry launched" },
+      { "value": "400+", "label": "SKUs in production" },
+      { "value": "Monterrey, MX", "label": "Where everything is made" }
+    ],
+    "whyModulWoods": {
+      "eyebrow": "Why Modul Woods",
+      "title": "Every cabinet, made to order.",
+      "description": "Our cabinets can be tailored to your specifications — size, number of drawers, wall-mount or free-standing — with the ability to include the countertop of your choice, for both vanities and kitchens. Tops come in cultured marble, cultured granite, and quartz.",
+      "features": [
+        "Soft-close hinges and drawers on every cabinet",
+        "Painted MDF, laminated MDF or thermofoil construction",
+        "Wall-mounted or free-standing configurations",
+        "Vanity tops in quartz, cultured marble or cultured granite",
+        "Custom sizing for center and double-sink configurations",
+        "Full kitchen cabinetry — islands, tall units and interior storage",
+        "Custom closets — drawers, hanging rods and open shelving",
+        "Engineered for residential, hospitality & multi-family use",
+        "The complete vanity combo — cabinet and top from one source"
+      ]
+    }
+  },
+  "kitchens": {
+    "eyebrow": "Kitchens",
+    "title": "Kitchen cabinets",
+    "subtitle": "Integral kitchens that adapt to every need.",
+    "description": "Vanity cabinets are only part of what we build. Our shop also manufactures complete, frameless kitchen cabinetry — base and tall units, islands, glass-front uppers and interior storage — in standard designs as well as ADA-compliant layouts, for residential, multifamily and hospitality projects like this recent build below.",
+    "features": [
+      "Frameless construction",
+      "Soft-close hinges & drawers",
+      "5–6 weeks lead time on custom projects",
+      "Paired with quartz, cultured marble or granite countertops"
+    ],
+    "galleryTitle": "Recent build",
+    "cta": {
+      "eyebrow": "Kitchens",
+      "title": "Planning a kitchen?",
+      "description": "Send us your layout and we'll come back with a configuration, finishes and a lead time.",
+      "primary": "Request a quote",
+      "secondary": "See collections"
+    }
+  },
+  "closets": {
+    "eyebrow": "Closets",
+    "title": "Custom closets",
+    "subtitle": "Closets built around how you live.",
+    "description": "Beyond vanities and kitchens, we design and manufacture frameless closet systems — hanging rods, adjustable shelving and custom drawer banks — tailored to the exact dimensions of every room.",
+    "features": [
+      "Frameless construction",
+      "Soft-close hinges & drawers",
+      "Adjustable shelving & hanging rods",
+      "Built to custom room dimensions"
+    ],
+    "galleryTitle": "Recent builds",
+    "cta": {
+      "eyebrow": "Closets",
+      "title": "Every room has its own dimensions.",
+      "description": "Tell us about the space and we'll design a closet system around it.",
+      "primary": "Request a quote",
+      "secondary": "See collections"
+    }
+  },
+  "finishes": {
+    "eyebrow": "Materials",
+    "title": "Finishes & materials",
+    "subtitle": "Cabinet finishes and vanity tops.",
+    "description": "Every collection can be ordered in any of the finishes below. Cabinet fronts come in painted MDF, laminated MDF or thermofoil; tops in quartz, cultured marble or cultured granite.",
+    "tabs": {
+      "painted": "Painted",
+      "laminated": "Laminated",
+      "thermofoil": "Thermofoil",
+      "vanityTops": "Vanity Tops"
+    },
+    "groups": {
+      "quartz": "Quartz",
+      "culturedMarble": "Cultured Marble",
+      "culturedGranite": "Cultured Granite"
+    },
+    "note": "Screen colours are a reference only. Request a physical sample before specifying a finish.",
+    "cta": {
+      "eyebrow": "Samples",
+      "title": "Want to see it in person?",
+      "description": "We ship physical samples so you can match a finish against the rest of the room before you specify it.",
+      "primary": "Request samples",
+      "secondary": "See collections"
+    }
+  },
+  "products": {
+    "eyebrow": "Collections",
+    "title": "Collections",
+    "subtitle": "Find the right fit for your project.",
+    "description": "Thirty-six collections across three lines. Filter by line, cabinet finish, colour or vanity top material.",
+    "lines": {
+      "hospitality": "Hospitality",
+      "premium": "Premium",
+      "essential": "Essential Line"
+    },
+    "lineDescriptions": {
+      "hospitality": "Built for hotels, motels, assisted living and multi-family properties.",
+      "premium": "Refined design and custom sizing for residential and high-end projects.",
+      "essential": "Style that fits every budget, without compromising construction."
+    },
+    "filters": {
+      "title": "Filters",
+      "open": "Filters",
+      "close": "Close filters",
+      "line": "Product line",
+      "finish": "Cabinet finish",
+      "color": "Cabinet color",
+      "top": "Vanity top",
+      "clear": "Clear all",
+      "apply": "Show results",
+      "results": "collections",
+      "resultsOne": "collection",
+      "empty": "No collection matches these filters.",
+      "emptyAction": "Clear the filters"
+    },
+    "detail": {
+      "code": "Reference",
+      "line": "Line",
+      "size": "Size",
+      "madeToOrder": "Made to order",
+      "specs": "Specifications",
+      "cabinetColors": "Cabinet colors",
+      "topColors": "Vanity tops",
+      "related": "More from this line",
+      "cta": {
+        "eyebrow": "This collection",
+        "title": "Request pricing and lead time.",
+        "description": "Tell us the size, the finish and how many units your project needs.",
+        "primary": "Request a quote",
+        "secondary": "Back to collections"
+      }
+    }
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Contact",
+    "subtitle": "Send us a message.",
+    "description": "Got a question, query, problem or something you need to tell us? Our team is ready to help.",
+    "info": {
+      "title": "Reach us directly",
+      "manufacturing": "Manufacturing",
+      "distribution": "Distribution",
+      "phoneUS": "Toll free US",
+      "phoneMX": "Phone MX",
+      "email": "E-mail",
+      "hoursTitle": "Business hours",
+      "hours": {
+        "mon-fri": "Monday – Friday",
+        "sat": "Saturday",
+        "sun": "Sunday"
+      },
+      "closed": "Closed",
+      "socialTitle": "Follow us"
+    },
+    "form": {
+      "title": "Send us a message",
+      "fullName": "Full name",
+      "email": "E-mail",
+      "phone": "Phone",
+      "company": "Company",
+      "message": "Message",
+      "messagePlaceholder": "Tell us about your project — type, quantity and timeline.",
+      "submitButton": "Send message",
+      "sending": "Sending…",
+      "success": "Thanks — we'll get back to you shortly.",
+      "error": "Something went wrong. Please try again or email us directly.",
+      "required": "This field is required",
+      "invalidEmail": "Enter a valid e-mail address",
+      "tooShort": "Please add a little more detail",
+      "consent": "By sending this form you agree to be contacted about your enquiry."
+    }
+  },
+  "footer": {
+    "tagline": "Frameless vanity, kitchen and closet cabinetry — made to order in Monterrey, México.",
+    "explore": "Explore",
+    "company": "Company",
+    "contact": "Contact",
+    "catalog": "Kitchen solutions catalog",
+    "rights": "All rights reserved.",
+    "madeIn": "Manufactured in Monterrey, MX · Distributed from Laredo, TX"
+  }
+}

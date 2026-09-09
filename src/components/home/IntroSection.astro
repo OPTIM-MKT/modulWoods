@@ -1,0 +1,23 @@
+---
+import SectionHeader from "@/components/shared/SectionHeader.astro";
+import StatGrid from "@/components/shared/StatGrid.astro";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+
+const lang = getLang(Astro.currentLocale);
+const { intro } = getI18N(lang).home;
+---
+
+<section class="section-y">
+  <div class="container-x">
+    <div class="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
+      <SectionHeader eyebrow={intro.eyebrow} title={intro.title} />
+
+      <div class="reveal lg:pt-14" style="transition-delay:120ms">
+        <p class="type-body text-muted sm:text-lg">{intro.description}</p>
+      </div>
+    </div>
+
+    <StatGrid stats={intro.stats} class="mt-14 lg:mt-20" />
+  </div>
+</section>

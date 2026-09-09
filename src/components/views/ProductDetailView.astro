@@ -1,0 +1,211 @@
+---
+import { Image } from "astro:assets";
+import { render } from "astro:content";
+import { FiArrowLeft, FiCheck } from "react-icons/fi";
+
+import Layout from "@/layouts/Layout.astro";
+import SwatchGrid from "@/components/finishes/SwatchGrid.astro";
+import ProductCard from "@/components/products/ProductCard.astro";
+import CtaSection from "@/components/shared/CtaSection.astro";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+import { usePath } from "@/i18n/utils";
+import { cabinetSwatchesFor, topSwatchesFor } from "@/lib/finishes";
+import { relatedProducts, type Product } from "@/lib/products";
+
+interface Props {
+  product: Product;
+  siblings: Product[];
+}
+
+const { product, siblings } = Astro.props;
+const { data } = product;
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+const path = usePath(lang);
+
+const detail = i18n.products.detail;
+const { Content } = await render(product);
+
+const cabinetGroups = cabinetSwatchesFor(data.colors);
+const topGroups = topSwatchesFor(data.tops);
+const related = relatedProducts(siblings, product);
+
+const facts = [
+  { label: detail.code, value: data.code },
+  { label: detail.line, value: i18n.products.lines[data.category] },
+  { label: detail.size, value: data.size },
+];
+---
+
+<Layout
+  title={`${data.title} — ${i18n.products.lines[data.category]} | Modul Woods`}
+  description={data.excerpt}
+>
+  <section class="section-y-sm">
+    <div class="container-x">
+      <a
+        href={path("products")}
+        class="press inline-flex items-center gap-2 text-sm font-medium text-muted hover:text-ink"
+      >
+        <FiArrowLeft className="h-4 w-4" aria-hidden="true" />
+        {i18n.common.backTo}
+      </a>
+
+      <div class="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-16">
+        <!-- Image: the shared element the grid hands over on navigation -->
+        <div
+          class="overflow-hidden rounded-[1.5rem] border border-line bg-panelAlt shadow-e2 lg:sticky lg:top-28 lg:self-start"
+        >
+          <Image
+            src={data.cover}
+            alt={data.title}
+            widths={[560, 900, 1400]}
+            sizes="(min-width: 1024px) 46vw, 92vw"
+            loading="eager"
+            fetchpriority="high"
+            transition:name={`product-image-${data.slug}`}
+            class="aspect-4/3 h-full w-full object-cover"
+          />
+        </div>
+
+        <!-- Facts -->
+        <div>
+          <p class="type-eyebrow text-secondary">
+            {i18n.products.lines[data.category]}
+          </p>
+
+          <h1
+            class="type-display mt-4 text-ink"
+            transition:name={`product-title-${data.slug}`}
+          >
+            {data.title}
+          </h1>
+
+          <p class="type-body mt-5 text-muted">{data.excerpt}</p>
+
+          {
+            data.madeToOrder && (
+              <p class="mt-6 inline-flex items-center gap-2 rounded-full bg-secondary/12 px-3.5 py-1.5 text-xs font-semibold text-secondary">
+                <FiCheck className="h-3.5 w-3.5" strokeWidth={3} aria-hidden="true" />
+                {detail.madeToOrder}
+              </p>
+            )
+          }
+
+          <dl
+            class="mt-8 grid grid-cols-3 gap-px overflow-hidden rounded-card border border-line bg-line"
+          >
+            {
+              facts.map(({ label, value }) => (
+                <div class="bg-canvas px-4 py-4">
+                  <dt class="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-faint">
+                    {label}
+                  </dt>
+                  <dd class="mt-1.5 text-sm font-semibold text-ink">{value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+
+          <div
+            class="prose prose-sm mt-8 max-w-none text-muted prose-strong:text-ink prose-p:leading-relaxed"
+          >
+            <Content />
+          </div>
+
+          {
+            data.specs.length > 0 && (
+              <div class="mt-10">
+                <h2 class="type-label text-muted">{detail.specs}</h2>
+
+                <dl class="mt-4 divide-y divide-line border-y border-line">
+                  {data.specs.map(({ label, value }) => (
+                    <div class="flex items-baseline justify-between gap-6 py-3.5">
+                      <dt class="text-sm text-muted">{label}</dt>
+                      <dd class="text-right text-sm font-medium text-ink">
+                        {value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )
+          }
+
+          <a href={path("contact")} class="btn btn-primary mt-9 w-full sm:w-auto">
+            {i18n.common.requestQuote}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Finishes this collection ships in -->
+  <section class="section-y bg-panelAlt/45">
+    <div class="container-x space-y-14">
+      <div class="reveal">
+        <h2 class="type-title text-ink">{detail.cabinetColors}</h2>
+
+        <div class="mt-8 space-y-10">
+          {
+            cabinetGroups.map(({ finish, swatches }) => (
+              <SwatchGrid
+                swatches={swatches}
+                title={i18n.finishes.tabs[finish]}
+                size="sm"
+              />
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="reveal border-t border-line pt-14">
+        <h2 class="type-title text-ink">{detail.topColors}</h2>
+
+        <div class="mt-8 space-y-10">
+          {
+            topGroups.map(({ material, swatches }) => (
+              <SwatchGrid
+                swatches={swatches}
+                title={i18n.finishes.groups[material]}
+                size="sm"
+              />
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    related.length > 0 && (
+      <section class="section-y">
+        <div class="container-x">
+          <h2 class="type-title reveal text-ink">{detail.related}</h2>
+
+          <ul class="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            {related.map((item, index) => (
+              <li class="contents">
+                {/* Transition names must be unique per document — the hero
+                    above already owns this collection's pair. */}
+                <ProductCard product={item} index={index} transitions={false} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <CtaSection
+    eyebrow={detail.cta.eyebrow}
+    title={detail.cta.title}
+    description={detail.cta.description}
+    primaryLabel={detail.cta.primary}
+    primaryHref={path("contact")}
+    secondaryLabel={detail.cta.secondary}
+    secondaryHref={path("products")}
+  />
+</Layout>

@@ -1,0 +1,28 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { getI18N, getLang } from "@/i18n/i18n";
+import { usePath } from "@/i18n/utils";
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+const path = usePath(lang);
+---
+
+<Layout title="404 — Modul Woods" description={i18n.seo.description}>
+  <section class="section-y">
+    <div class="container-x flex min-h-[50vh] flex-col justify-center">
+      <p class="type-eyebrow text-secondary">404</p>
+      <h1 class="type-display mt-5 max-w-2xl text-ink">
+        {i18n.nav.index} · {i18n.products.title}
+      </h1>
+      <p class="type-body mt-5 max-w-lg text-muted">{i18n.seo.description}</p>
+
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a href={path("index")} class="btn btn-solid">{i18n.nav.index}</a>
+        <a href={path("products")} class="btn btn-outline">
+          {i18n.nav.products}
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

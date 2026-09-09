@@ -1,0 +1,318 @@
+{
+  "seo": {
+    "title": "Modul Woods — Gabinetes de Baño y Cocina Premium",
+    "description": "Gabinetes de baño y cocina de calidad premium para proyectos residenciales, hoteleros y multifamiliares. Fabricación en Monterrey, MX. Distribución en Laredo, TX.",
+    "pages": {
+      "about": {
+        "title": "Nosotros — Modul Woods",
+        "description": "De encimeras de mármol cultivado en 2004 a una división completa de gabinetes sin marco. La historia detrás de Modul Woods."
+      },
+      "kitchens": {
+        "title": "Gabinetes de cocina — Modul Woods",
+        "description": "Cocinas integrales sin marco: unidades base y altas, islas, gabinetes superiores con frente de vidrio y almacenamiento interior, en diseños estándar y ADA."
+      },
+      "closets": {
+        "title": "Clósets personalizados — Modul Woods",
+        "description": "Sistemas de clóset sin marco con barras para colgar, estantes ajustables y cajoneras a medida, construidos a las dimensiones exactas de cada habitación."
+      },
+      "finishes": {
+        "title": "Acabados y materiales — Modul Woods",
+        "description": "Acabados de gabinete pintado, laminado y termofolio, además de encimeras en cuarzo, mármol cultivado y granito cultivado."
+      },
+      "products": {
+        "title": "Colecciones — Modul Woods",
+        "description": "Treinta y seis colecciones de gabinetes en nuestras líneas Hospitality, Premium y Essential. Filtra por línea, acabado y color."
+      },
+      "contact": {
+        "title": "Contacto — Modul Woods",
+        "description": "Habla con nuestro equipo sobre tu próximo proyecto residencial, hotelero o multifamiliar."
+      }
+    }
+  },
+  "nav": {
+    "index": "Inicio",
+    "products": "Colecciones",
+    "kitchens": "Cocinas",
+    "closets": "Clósets",
+    "finishes": "Acabados",
+    "about": "Nosotros",
+    "contact": "Contacto",
+    "menu": "Menú",
+    "close": "Cerrar",
+    "language": "Idioma",
+    "theme": "Cambiar tema",
+    "skip": "Saltar al contenido"
+  },
+  "common": {
+    "viewAll": "Ver todo",
+    "learnMore": "Conocer más",
+    "explore": "Explorar",
+    "getInTouch": "Contáctanos",
+    "requestQuote": "Solicitar cotización",
+    "downloadCatalog": "Descargar catálogo",
+    "backTo": "Volver a colecciones",
+    "backToTop": "Volver arriba",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "loading": "Cargando",
+    "gallery": "Galería",
+    "openImage": "Abrir imagen"
+  },
+  "home": {
+    "hero": {
+      "slides": [
+        {
+          "eyebrow": "Gabinetes de cocina",
+          "title": "Cocinas completas, hechas a la medida.",
+          "subtitle": "Unidades base y altas sin marco, islas y almacenamiento interior, terminadas con la encimera de tu elección."
+        },
+        {
+          "eyebrow": "Línea Premium",
+          "title": "Diseño refinado, tamaño personalizado.",
+          "subtitle": "Quince colecciones premium combinadas con encimeras de cuarzo, mármol cultivado o granito cultivado."
+        },
+        {
+          "eyebrow": "Línea Hospitality",
+          "title": "Construida para hoteles y multifamiliares.",
+          "subtitle": "Diseñada para resistir en hoteles, moteles, residencias para adultos mayores y propiedades multifamiliares."
+        },
+        {
+          "eyebrow": "Línea Essential",
+          "title": "Estilo que se adapta a cualquier presupuesto.",
+          "subtitle": "Gretta, Charleston, Denmark, Arizona y Berlin llevan el estilo de Modul Woods a cada proyecto."
+        }
+      ],
+      "cta_primary": "Ver colecciones",
+      "cta_secondary": "Hablemos",
+      "scroll": "Desliza para explorar"
+    },
+    "intro": {
+      "eyebrow": "Desde 2004",
+      "title": "Un solo fabricante, del gabinete a la encimera.",
+      "description": "Modul Woods fabrica gabinetes sin marco para baños, cocinas y clósets, además de las encimeras que los rematan. Un solo taller, un solo tiempo de entrega y un solo contacto para proyectos residenciales, hoteleros y multifamiliares.",
+      "stats": [
+        { "value": "400+", "label": "SKUs en producción" },
+        { "value": "50+", "label": "Colores y acabados" },
+        { "value": "36", "label": "Colecciones de gabinetes" },
+        { "value": "95%", "label": "Producción para el mercado de EE. UU." }
+      ]
+    },
+    "kitchens": {
+      "eyebrow": "Cocinas",
+      "title": "Cocinas integrales que se adaptan a cada necesidad.",
+      "description": "Unidades base y altas, islas, gabinetes superiores con frente de vidrio y almacenamiento interior, en diseños estándar y distribuciones compatibles con ADA.",
+      "cta": "Explorar cocinas"
+    },
+    "products": {
+      "eyebrow": "Colecciones",
+      "title": "Tres líneas. Treinta y seis colecciones.",
+      "description": "Hospitality, Premium y Essential: cada colección se fabrica sobre pedido en el tamaño, acabado y color que tu proyecto necesita.",
+      "cta": "Ver colecciones"
+    },
+    "closets": {
+      "eyebrow": "Clósets",
+      "title": "Clósets diseñados según tu estilo de vida.",
+      "description": "Barras para colgar, estantes ajustables y cajoneras a medida, adaptados a las dimensiones exactas de cada habitación.",
+      "cta": "Explorar clósets"
+    },
+    "cta": {
+      "eyebrow": "Inicia un proyecto",
+      "title": "Cuéntanos qué estás construyendo.",
+      "description": "Envíanos tus especificaciones y nuestro equipo te responderá con medidas, acabados y tiempos de entrega.",
+      "primary": "Solicitar cotización",
+      "secondary": "Descargar catálogo"
+    }
+  },
+  "about-us": {
+    "eyebrow": "Nosotros",
+    "title": "El comienzo de Modul Woods.",
+    "content": [
+      "Modular Vanity Tops fue fundada en 2004, especializándose en la fabricación de encimeras de mármol cultivado de alta calidad. A lo largo de los años, ampliamos nuestro portafolio de productos para incluir estilos y materiales adicionales, evolucionando continuamente para satisfacer las necesidades de nuestros clientes.",
+      "En 2018 lanzamos Modul Woods, nuestra división de gabinetes personalizados, extendiendo nuestra experiencia más allá de las encimeras para incluir gabinetes premium de baño y cocina. Hoy en día fabricamos gabinetes sin marco para baños y cocinas, ofreciendo muebles de tocador, gabinetes base y de pared, despensas altas, islas y soluciones de almacenamiento a medida.",
+      "Nuestros productos sirven a proyectos residenciales, de hostelería, multifamiliares, de vida para adultos mayores y comerciales, brindando a los clientes una solución completa y coordinada desde un único fabricante. Ya sea para equipar una sola casa o un gran hotel, estamos comprometidos a entregar artesanía excepcional, calidad confiable y diseños innovadores que dan vida a cada espacio."
+    ],
+    "stats": [
+      { "value": "2004", "label": "Fundada como Modular Vanity Tops" },
+      { "value": "2018", "label": "Nace la división Modul Woods" },
+      { "value": "400+", "label": "SKUs en producción" },
+      { "value": "Monterrey, MX", "label": "Donde se fabrica todo" }
+    ],
+    "whyModulWoods": {
+      "eyebrow": "Por qué Modul Woods",
+      "title": "Cada gabinete, hecho a la medida.",
+      "description": "Nuestros gabinetes pueden adaptarse a tus especificaciones (tamaño, número de cajones, montados en la pared o independientes) con la capacidad de incluir la encimera de tu elección, tanto para baños como para cocinas. Las encimeras vienen en mármol cultivado, granito cultivado y cuarzo.",
+      "features": [
+        "Bisagras y cajones de cierre suave en todos los gabinetes",
+        "Construcción en MDF pintado, MDF laminado o termofolio",
+        "Configuraciones montadas en la pared o independientes",
+        "Encimeras en cuarzo, mármol cultivado o granito cultivado",
+        "Tamaños personalizados para configuraciones de lavabo central y doble",
+        "Gabinetes de cocina completos: islas, unidades altas y almacenamiento interior",
+        "Clósets a medida: cajones, barras para colgar y estanterías abiertas",
+        "Diseñados para uso residencial, hotelero y multifamiliar",
+        "El combo completo de tocador: gabinete y encimera de una sola fuente"
+      ]
+    }
+  },
+  "kitchens": {
+    "eyebrow": "Cocinas",
+    "title": "Gabinetes de cocina",
+    "subtitle": "Cocinas integrales que se adaptan a cada necesidad.",
+    "description": "Los gabinetes de baño son solo una parte de lo que construimos. Nuestro taller también fabrica cocinas integrales sin marco (unidades base y altas, islas, gabinetes superiores con frente de vidrio y almacenamiento interior) en diseños estándar y distribuciones compatibles con ADA, para proyectos residenciales, multifamiliares y hoteleros como el que se muestra abajo.",
+    "features": [
+      "Construcción sin marco",
+      "Bisagras y cajones de cierre suave",
+      "Tiempo de entrega de 5-6 semanas en proyectos personalizados",
+      "Combinados con encimeras de cuarzo, mármol cultivado o granito"
+    ],
+    "galleryTitle": "Proyecto reciente",
+    "cta": {
+      "eyebrow": "Cocinas",
+      "title": "¿Estás planeando una cocina?",
+      "description": "Envíanos tu distribución y te responderemos con una configuración, acabados y tiempo de entrega.",
+      "primary": "Solicitar cotización",
+      "secondary": "Ver colecciones"
+    }
+  },
+  "closets": {
+    "eyebrow": "Clósets",
+    "title": "Clósets personalizados",
+    "subtitle": "Clósets diseñados según tu estilo de vida.",
+    "description": "Más allá de baños y cocinas, diseñamos y fabricamos sistemas de clósets sin marco (barras para colgar, estantes ajustables y cajoneras a medida) adaptados a las dimensiones exactas de cada habitación.",
+    "features": [
+      "Construcción sin marco",
+      "Bisagras y cajones de cierre suave",
+      "Estantes ajustables y barras para colgar",
+      "Construidos a las dimensiones exactas de la habitación"
+    ],
+    "galleryTitle": "Proyectos recientes",
+    "cta": {
+      "eyebrow": "Clósets",
+      "title": "Cada habitación tiene sus propias medidas.",
+      "description": "Cuéntanos sobre el espacio y diseñaremos un sistema de clóset a su alrededor.",
+      "primary": "Solicitar cotización",
+      "secondary": "Ver colecciones"
+    }
+  },
+  "finishes": {
+    "eyebrow": "Materiales",
+    "title": "Acabados y materiales",
+    "subtitle": "Acabados de gabinetes y encimeras.",
+    "description": "Cada colección puede pedirse en cualquiera de los acabados siguientes. Los frentes de gabinete vienen en MDF pintado, MDF laminado o termofolio; las encimeras en cuarzo, mármol cultivado o granito cultivado.",
+    "tabs": {
+      "painted": "Pintado",
+      "laminated": "Laminado",
+      "thermofoil": "Termofolio",
+      "vanityTops": "Encimeras"
+    },
+    "groups": {
+      "quartz": "Cuarzo",
+      "culturedMarble": "Mármol cultivado",
+      "culturedGranite": "Granito cultivado"
+    },
+    "note": "Los colores en pantalla son solo una referencia. Solicita una muestra física antes de especificar un acabado.",
+    "cta": {
+      "eyebrow": "Muestras",
+      "title": "¿Quieres verlo en persona?",
+      "description": "Enviamos muestras físicas para que compares el acabado con el resto del espacio antes de especificarlo.",
+      "primary": "Solicitar muestras",
+      "secondary": "Ver colecciones"
+    }
+  },
+  "products": {
+    "eyebrow": "Colecciones",
+    "title": "Colecciones",
+    "subtitle": "Encuentra el ajuste perfecto para tu proyecto.",
+    "description": "Treinta y seis colecciones en tres líneas. Filtra por línea, acabado de gabinete, color o material de encimera.",
+    "lines": {
+      "hospitality": "Hospitality",
+      "premium": "Premium",
+      "essential": "Essential Line"
+    },
+    "lineDescriptions": {
+      "hospitality": "Construida para hoteles, moteles, residencias y propiedades multifamiliares.",
+      "premium": "Diseño refinado y tamaños personalizados para proyectos residenciales y de alta gama.",
+      "essential": "Estilo que se adapta a cualquier presupuesto, sin comprometer la construcción."
+    },
+    "filters": {
+      "title": "Filtros",
+      "open": "Filtros",
+      "close": "Cerrar filtros",
+      "line": "Línea de producto",
+      "finish": "Acabado de gabinete",
+      "color": "Color de gabinete",
+      "top": "Encimera",
+      "clear": "Limpiar todo",
+      "apply": "Ver resultados",
+      "results": "colecciones",
+      "resultsOne": "colección",
+      "empty": "Ninguna colección coincide con estos filtros.",
+      "emptyAction": "Limpiar los filtros"
+    },
+    "detail": {
+      "code": "Referencia",
+      "line": "Línea",
+      "size": "Medida",
+      "madeToOrder": "Hecho sobre pedido",
+      "specs": "Especificaciones",
+      "cabinetColors": "Colores de gabinete",
+      "topColors": "Encimeras",
+      "related": "Más de esta línea",
+      "cta": {
+        "eyebrow": "Esta colección",
+        "title": "Solicita precio y tiempo de entrega.",
+        "description": "Cuéntanos la medida, el acabado y cuántas unidades necesita tu proyecto.",
+        "primary": "Solicitar cotización",
+        "secondary": "Volver a colecciones"
+      }
+    }
+  },
+  "contact": {
+    "eyebrow": "Contacto",
+    "title": "Contacto",
+    "subtitle": "Envíanos un mensaje.",
+    "description": "¿Tienes alguna pregunta, consulta, problema o algo que necesites decirnos? Nuestro equipo está listo para ayudar.",
+    "info": {
+      "title": "Contáctanos directamente",
+      "manufacturing": "Fabricación",
+      "distribution": "Distribución",
+      "phoneUS": "Línea gratuita EE. UU.",
+      "phoneMX": "Teléfono MX",
+      "email": "Correo electrónico",
+      "hoursTitle": "Horario de atención",
+      "hours": {
+        "mon-fri": "Lunes – Viernes",
+        "sat": "Sábado",
+        "sun": "Domingo"
+      },
+      "closed": "Cerrado",
+      "socialTitle": "Síguenos"
+    },
+    "form": {
+      "title": "Envíanos un mensaje",
+      "fullName": "Nombre completo",
+      "email": "Correo electrónico",
+      "phone": "Teléfono",
+      "company": "Empresa",
+      "message": "Mensaje",
+      "messagePlaceholder": "Cuéntanos sobre tu proyecto: tipo, cantidad y fechas.",
+      "submitButton": "Enviar mensaje",
+      "sending": "Enviando…",
+      "success": "Gracias, te responderemos muy pronto.",
+      "error": "Algo salió mal. Inténtalo de nuevo o escríbenos directamente.",
+      "required": "Este campo es obligatorio",
+      "invalidEmail": "Escribe un correo electrónico válido",
+      "tooShort": "Agrega un poco más de detalle",
+      "consent": "Al enviar este formulario aceptas que te contactemos sobre tu consulta."
+    }
+  },
+  "footer": {
+    "tagline": "Gabinetes sin marco para baño, cocina y clóset, fabricados sobre pedido en Monterrey, México.",
+    "explore": "Explorar",
+    "company": "Empresa",
+    "contact": "Contacto",
+    "catalog": "Catálogo de soluciones para cocina",
+    "rights": "Todos los derechos reservados.",
+    "madeIn": "Fabricado en Monterrey, MX · Distribuido desde Laredo, TX"
+  }
+}

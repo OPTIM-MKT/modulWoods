@@ -1,0 +1,40 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/shared/PageHero.astro";
+import ContactInfo from "@/components/contact/ContactInfo.astro";
+import ContactForm from "@/components/contact/ContactForm";
+
+import { getI18N, getLang } from "@/i18n/i18n";
+
+const lang = getLang(Astro.currentLocale);
+const i18n = getI18N(lang);
+
+const copy = i18n.contact;
+const seo = i18n.seo.pages.contact;
+---
+
+<Layout title={seo.title} description={seo.description}>
+  <PageHero
+    eyebrow={copy.eyebrow}
+    title={copy.subtitle}
+    description={copy.description}
+  />
+
+  <section class="section-y">
+    <div class="container-x">
+      <div class="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <ContactInfo />
+
+        <div class="reveal card p-6 sm:p-8 lg:p-10" style="transition-delay:100ms">
+          <h2 class="type-heading text-ink">{copy.form.title}</h2>
+          <p class="mt-2 text-sm text-muted">{copy.subtitle}</p>
+
+          <div class="mt-8">
+            {/* Interactive island: validation runs client-side, nothing else does. */}
+            <ContactForm client:visible copy={copy.form} lang={lang} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
