@@ -106,25 +106,6 @@ const socials = [
     </ul>
   </div>
 
-  <!-- Hours -->
-  <div class="border-t border-line pt-8">
-    <h2 class="type-label text-muted">{info.hoursTitle}</h2>
-
-    <dl class="mt-5 space-y-3 text-sm">
-      {
-        CONTACT.hours.map(({ days, time }) => (
-          <div class="flex items-baseline justify-between gap-4">
-            <dt class="text-muted">{info.hours[days]}</dt>
-            <dd class="border-b border-dashed border-line flex-1" aria-hidden="true" />
-            <dd class="shrink-0 font-medium tabular-nums text-ink">
-              {time === "closed" ? info.closed : time}
-            </dd>
-          </div>
-        ))
-      }
-    </dl>
-  </div>
-
   <!-- Social -->
   <div class="border-t border-line pt-8">
     <h2 class="type-label text-muted">{info.socialTitle}</h2>

@@ -26,12 +26,13 @@ const modules = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true },
 );
 
-/** Turns `misiones-kitchen-wall.jpg.jpeg` into `Misiones kitchen wall`. */
+/** Turns `00-kitchen-main.jpg.jpeg` into `Kitchen main`. */
 const toLabel = (path: string) =>
   path
     .split("/")
     .pop()!
     .replace(/\.(jpe?g|png|webp|avif)/gi, "")
+    .replace(/^[\d]+-/, "") // strip sort prefixes like "00-"
     .replace(/[-_]+/g, " ")
     .replace(/\s+/g, " ")
     .trim()

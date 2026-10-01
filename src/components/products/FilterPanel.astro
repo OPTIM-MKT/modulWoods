@@ -2,12 +2,7 @@
 import { FiX } from "react-icons/fi";
 
 import { getI18N, getLang } from "@/i18n/i18n";
-import {
-  CABINET_COLORS,
-  CABINET_FINISHES,
-  PRODUCT_CATEGORIES,
-  TOP_MATERIALS,
-} from "@/constants/site";
+import { PRODUCT_CATEGORIES } from "@/constants/site";
 
 interface Props {
   /** How many products carry each value — a zero-result filter is disabled. */
@@ -25,41 +20,17 @@ const lang = getLang(Astro.currentLocale);
 const i18n = getI18N(lang);
 const f = i18n.products.filters;
 
-const groups = [
-  {
-    key: "line",
-    label: f.line,
-    options: PRODUCT_CATEGORIES.map((id) => ({
-      id,
-      name: i18n.products.lines[id],
-      count: counts.line[id] ?? 0,
-    })),
-  },
-  {
-    key: "finish",
-    label: f.finish,
-    options: CABINET_FINISHES.map((id) => ({
-      id,
-      name: i18n.finishes.tabs[id],
-      count: counts.finish[id] ?? 0,
-    })),
-  },
-  {
-    key: "top",
-    label: f.top,
-    options: TOP_MATERIALS.map((id) => ({
-      id,
-      name: i18n.finishes.groups[id],
-      count: counts.top[id] ?? 0,
-    })),
-  },
-] as const;
+const lineOptions = PRODUCT_CATEGORIES.map((id) => ({
+  id,
+  name: i18n.products.lines[id],
+  count: counts.line[id] ?? 0,
+}));
 ---
 
 <aside
   id="filter-panel"
   data-filter-panel
-  class="lg:sticky lg:top-28 lg:self-start lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto lg:pr-1"
+  class="lg:sticky lg:top-28 lg:self-start"
   aria-label={f.title}
 >
   <form data-filter-form class="space-y-8">
@@ -87,85 +58,34 @@ const groups = [
       </button>
     </div>
 
-    {
-      groups.map(({ key, label, options }) => (
-        <fieldset class="border-t border-line pt-6">
-          <legend class="type-label mb-4 text-ink">{label}</legend>
-
-          <ul class="space-y-1">
-            {options.map(({ id, name, count }) => (
-              <li>
-                <label
-                  class:list={[
-                    "flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm transition-colors duration-200",
-                    count === 0
-                      ? "cursor-not-allowed opacity-40"
-                      : "hover:bg-panelAlt",
-                  ]}
-                >
-                  <input
-                    type="checkbox"
-                    name={key}
-                    value={id}
-                    disabled={count === 0}
-                    class="filter-check"
-                  />
-                  <span class="flex-1 text-ink">{name}</span>
-                  <span class="text-xs tabular-nums text-faint">{count}</span>
-                </label>
-              </li>
-            ))}
-          </ul>
-        </fieldset>
-      ))
-    }
-
-    <!-- Colour is grouped by construction family so the swatches read in context -->
+    <!-- Product line filter — the only active filter group -->
     <fieldset class="border-t border-line pt-6">
-      <legend class="type-label mb-4 text-ink">{f.color}</legend>
+      <legend class="type-label mb-4 text-ink">{f.line}</legend>
 
-      <div class="space-y-5">
-        {
-          CABINET_FINISHES.map((finish) => (
-            <div>
-              <p class="mb-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-faint">
-                {i18n.finishes.tabs[finish]}
-              </p>
-
-              <ul class="flex flex-wrap gap-1.5">
-                {CABINET_COLORS[finish].map(({ id, name, swatch }) => {
-                  const count = counts.color[id] ?? 0;
-                  return (
-                    <li>
-                      <label
-                        title={`${name} (${count})`}
-                        class:list={[
-                          "swatch-label",
-                          count === 0 && "pointer-events-none opacity-30",
-                        ]}
-                      >
-                        <input
-                          type="checkbox"
-                          name="color"
-                          value={id}
-                          disabled={count === 0}
-                          class="sr-only"
-                        />
-                        <span
-                          class="swatch-dot"
-                          style={`background-color:${swatch}`}
-                          aria-hidden="true"
-                        />
-                        <span class="sr-only">{name}</span>
-                      </label>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))
-        }
-      </div>
+      <ul class="space-y-1">
+        {lineOptions.map(({ id, name, count }) => (
+          <li>
+            <label
+              class:list={[
+                "flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm transition-colors duration-200",
+                count === 0
+                  ? "cursor-not-allowed opacity-40"
+                  : "hover:bg-panelAlt",
+              ]}
+            >
+              <input
+                type="checkbox"
+                name="line"
+                value={id}
+                disabled={count === 0}
+                class="filter-check"
+              />
+              <span class="flex-1 text-ink">{name}</span>
+              <span class="text-xs tabular-nums text-faint">{count}</span>
+            </label>
+          </li>
+        ))}
+      </ul>
     </fieldset>
 
     <div class="flex gap-3 border-t border-line pt-6 lg:hidden">
@@ -207,41 +127,5 @@ const groups = [
     background-size: 82%;
     background-position: center;
     background-repeat: no-repeat;
-  }
-
-  .swatch-label {
-    display: block;
-    cursor: pointer;
-    border-radius: 9999px;
-    padding: 2px;
-    border: 1.5px solid transparent;
-    transition:
-      border-color 180ms var(--ease-standard),
-      transform 140ms var(--ease-out-soft);
-  }
-
-  .swatch-label:hover {
-    transform: scale(1.08);
-  }
-
-  .swatch-label:active {
-    transform: scale(0.94);
-  }
-
-  .swatch-dot {
-    display: block;
-    height: 1.4rem;
-    width: 1.4rem;
-    border-radius: 9999px;
-    border: 1px solid var(--line);
-  }
-
-  .swatch-label:has(:checked) {
-    border-color: var(--secondary);
-  }
-
-  .swatch-label:has(:focus-visible) {
-    outline: 2px solid var(--secondary);
-    outline-offset: 2px;
   }
 </style>
