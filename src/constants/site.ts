@@ -90,6 +90,8 @@ export const TOP_COLORS = {
     { id: "galaxy-gray", name: "Galaxy Gray" },
     { id: "manhattan-gray", name: "Manhattan Gray" },
     { id: "calacatta-vienna", name: "Calacatta Vienna" },
+    { id: "calacatta-tree", name: "Calacatta Tree" },
+    { id: "warm-greige", name: "Warm Greige" },
   ],
   culturedMarble: [
     { id: "solid-white", name: "Solid White" },
