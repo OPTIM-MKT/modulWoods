@@ -4,9 +4,7 @@ slug: berlin
 title: "Berlin"
 excerpt: "Tocador sin marco compacto que lleva el estilo de Modul Woods a cualquier presupuesto."
 cover: ../../../assets/products/essentialLine/Berlin-Blanco-Frontal-2.png
-code: "ESS-06"
 category: essential
-size: "21\" x 30\""
 finishes: ["painted", "thermofoil"]
 colors: ["white", "veralinga-alaska"]
 tops: ["quartz", "culturedMarble"]
@@ -18,12 +16,8 @@ specs:
     value: "Caja de MDF sin marco"
   - label: "Herrajes"
     value: "Bisagras y correderas de cierre suave"
-  - label: "Medida nominal"
-    value: "21\" x 30\""
   - label: "Montaje"
     value: "En pared o independiente"
-  - label: "Tiempo de entrega"
-    value: "5–6 semanas"
 ---
 
 La colección **Berlin** se fabrica sobre pedido en nuestro taller de Monterrey. Cada unidad se entrega con bisagras y correderas de cierre suave, caja sin marco y la opción de una encimera a juego en mármol cultivado, granito cultivado o cuarzo.

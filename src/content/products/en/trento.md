@@ -4,9 +4,7 @@ slug: trento
 title: "Trento"
 excerpt: "Refined frameless vanity with custom sizing and soft-close hardware throughout."
 cover: ../../../assets/products/premium/Trento-SH-Frontal.png
-code: "PRM-10"
 category: premium
-size: "36\" x 21\""
 finishes: ["laminated", "thermofoil"]
 colors: ["fresno-bruma", "sanatana-oak"]
 tops: ["quartz"]
@@ -18,12 +16,8 @@ specs:
     value: "Frameless MDF carcass"
   - label: "Hardware"
     value: "Soft-close hinges & drawer slides"
-  - label: "Nominal size"
-    value: "36\" x 21\""
   - label: "Mounting"
     value: "Wall-mounted or free-standing"
-  - label: "Lead time"
-    value: "5–6 weeks"
 ---
 
 The **Trento** collection is manufactured to order in our Monterrey shop. Every unit ships with soft-close hinges and drawer slides, a frameless carcass and the option of a matching cultured marble, cultured granite or quartz top.

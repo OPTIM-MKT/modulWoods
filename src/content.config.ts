@@ -29,10 +29,10 @@ const products = defineCollection({
       title: z.string(),
       excerpt: z.string(),
       cover: image(),
-      code: z.string(),
+      code: z.string().optional(),
       category: z.enum(PRODUCT_CATEGORIES),
       /** Nominal front size, e.g. `13.5" x 24.5"`. */
-      size: z.string(),
+      size: z.string().optional(),
       /** Which construction families this collection is offered in. */
       finishes: z.array(z.enum(CABINET_FINISHES)).nonempty(),
       /** Cabinet colour ids — must exist in `CABINET_COLORS`. */
