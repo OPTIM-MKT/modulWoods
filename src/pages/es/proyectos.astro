@@ -1,0 +1,253 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/shared/PageHero.astro";
+import { Image } from "astro:assets";
+import { FiMaximize2 } from "react-icons/fi";
+
+const modules = import.meta.glob<{ default: ImageMetadata }>(
+  "../../assets/proyectos/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG}",
+  { eager: true },
+);
+
+const allImages = Object.entries(modules).map(([path, mod]) => ({
+  path: path.split("/").pop()!,
+  src: mod.default,
+}));
+
+const projects = [
+  {
+    name: "AC Hotel Distrito Armida",
+    location: "Monterrey, Nuevo León",
+    match: "AC HOTEL DISTRITO ARMIDA",
+  },
+  {
+    name: "Best Western Aeropuerto",
+    location: "Monterrey, Nuevo León",
+    match: "BEST WESTERN AEROPUERTO",
+  },
+  {
+    name: "Torres Colonia",
+    location: "Monterrey, Nuevo León",
+    match: "TORRES COLONIA",
+  },
+  {
+    name: "Holiday Inn Express",
+    location: "Torreón, Coahuila",
+    match: "HOLIDAY INN EXPRESS",
+  },
+  {
+    name: "Hotel SAFI Centro",
+    location: "Monterrey, Nuevo León",
+    match: "SAFI CENTRO",
+  },
+  {
+    name: "Hotel SAFI Valle",
+    location: "Monterrey, Nuevo León",
+    match: "SAFI SAN PEDRO",
+  },
+  {
+    name: "Torres Mil – Torre La Silla",
+    location: "Monterrey, Nuevo León",
+    match: "TORRES MIL",
+  },
+  {
+    name: "Torre UNA – Desarrollos IDEI / PMK",
+    location: "Monterrey, Nuevo León",
+    match: "TORRE UNA",
+  },
+  {
+    name: "Kyo Constella",
+    location: "Monterrey, Nuevo León",
+    match: "KYO CONSTELLA",
+  },
+  {
+    name: "GP Vivienda",
+    location: "Monterrey, Nuevo León",
+    match: "GP VIVIENDA",
+  },
+  {
+    name: "Torre Ready by Loma Desarrollos",
+    location: "Monterrey, Nuevo León",
+    match: "READY BY LOMA",
+  },
+  {
+    name: "Privada Bosques de las Misiones",
+    location: "Monterrey, Nuevo León",
+    match: "BOSQUES DE LAS MISIONES",
+  },
+  {
+    name: "Liceo de Monterrey",
+    location: "Monterrey, Nuevo León",
+    match: "LICEO DE MONTERREY",
+  },
+  {
+    name: "Gobierno de Santiago",
+    location: "Monterrey, Nuevo León",
+    match: "GOBIERNO DE SANTIAGO",
+  },
+].map((p, index) => {
+  const projImages = allImages.filter((img) =>
+    img.path.toUpperCase().includes(p.match),
+  );
+  return {
+    ...p,
+    id: `gallery-${index}`,
+    images: projImages.map((img) => img.src),
+  };
+});
+---
+
+<Layout
+  title="Proyectos | Modul Woods"
+  description="Nuestros proyectos destacados residenciales, hoteleros y comerciales."
+>
+  <PageHero
+    eyebrow="Portafolio"
+    title="Nuestros Proyectos"
+    description="Explora una selección de proyectos residenciales, hoteleros y multifamiliares equipados con la calidad y diseño de Modul Woods."
+  />
+
+  <section class="section-y">
+    <div class="container-x">
+      <div class="grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+        {
+          projects.map((project) =>
+            project.images.length > 0 ? (
+              <div class="flex flex-col gap-4">
+                <div
+                  id={project.id}
+                  data-pswp-gallery
+                  class="group relative block overflow-hidden rounded-card bg-panelAlt shadow-e1 aspect-4/3 cursor-pointer press-soft focus-visible:outline-offset-4"
+                >
+                  {/* Primary Image is rendered as the cover */}
+                  <a
+                    href={project.images[0].src}
+                    data-pswp-width={project.images[0].width}
+                    data-pswp-height={project.images[0].height}
+                    data-pswp-caption={project.name}
+                    target="_blank"
+                    class="contents"
+                  >
+                    <Image
+                      src={project.images[0]}
+                      alt={project.name}
+                      widths={[400, 800, 1200]}
+                      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                      class="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+                    />
+                    <span class="pointer-events-none absolute inset-0 bg-linear-to-t from-baseBlack/55 via-baseBlack/0 to-baseBlack/0 opacity-0 transition-opacity duration-400 group-hover:opacity-100" />
+                    <span class="pointer-events-none absolute bottom-3 left-4 right-4 flex items-center justify-end gap-3 translate-y-2 opacity-0 transition-[opacity,transform] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0 group-hover:opacity-100 text-white">
+                      <FiMaximize2 className="h-5 w-5 shrink-0 text-white" />
+                    </span>
+                  </a>
+
+                  {/* Hidden links for the rest of the images so they appear in the lightbox */}
+                  {project.images.slice(1).map((img) => (
+                    <a
+                      href={img.src}
+                      data-pswp-width={img.width}
+                      data-pswp-height={img.height}
+                      data-pswp-caption={project.name}
+                      target="_blank"
+                      class="hidden"
+                    ></a>
+                  ))}
+
+                  {project.images.length > 1 && (
+                    <span class="pointer-events-none absolute top-3 right-3 bg-canvas/85 text-ink text-[0.65rem] font-semibold uppercase tracking-[0.12em] px-2.5 py-1 rounded-full backdrop-blur-md">
+                      +{project.images.length - 1} fotos
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <h3 class="type-subheading text-ink">{project.name}</h3>
+                  <p class="text-sm text-muted">{project.location}</p>
+                </div>
+              </div>
+            ) : (
+              <div class="flex flex-col gap-4">
+                <div class="overflow-hidden rounded-card border border-dashed border-line bg-panelAlt/30 aspect-4/3 flex flex-col items-center justify-center text-muted gap-2">
+                  <span class="text-xs uppercase tracking-widest font-semibold opacity-70">
+                    Fotos próximamente
+                  </span>
+                </div>
+                <div>
+                  <h3 class="type-subheading text-ink">{project.name}</h3>
+                  <p class="text-sm text-muted">{project.location}</p>
+                </div>
+              </div>
+            ),
+          )
+        }
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import PhotoSwipeLightbox from "photoswipe/lightbox";
+  import "photoswipe/style.css";
+
+  let lightboxes: PhotoSwipeLightbox[] = [];
+
+  function initGalleries() {
+    destroyGalleries();
+
+    document
+      .querySelectorAll<HTMLElement>("[data-pswp-gallery]")
+      .forEach((el) => {
+        const lb = new PhotoSwipeLightbox({
+          gallery: `#${el.id}`,
+          children: "a",
+          bgOpacity: 0.92,
+          pswpModule: () => import("photoswipe"),
+        });
+
+        lb.on("uiRegister", () => {
+          lb.pswp?.ui?.registerElement({
+            name: "caption",
+            order: 9,
+            isButton: false,
+            appendTo: "root",
+            html: "",
+            onInit: (el, pswp) => {
+              el.classList.add("pswp-caption");
+              pswp.on("change", () => {
+                el.textContent =
+                  pswp.currSlide?.data.element?.dataset.pswpCaption ?? "";
+              });
+            },
+          });
+        });
+
+        lb.init();
+        lightboxes.push(lb);
+      });
+  }
+
+  function destroyGalleries() {
+    lightboxes.forEach((lb) => lb.destroy());
+    lightboxes = [];
+  }
+
+  document.addEventListener("astro:page-load", initGalleries);
+  document.addEventListener("astro:before-swap", destroyGalleries);
+</script>
+
+<style is:global>
+  .pswp-caption {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 50%;
+    translate: -50% 0;
+    max-width: min(40rem, 90vw);
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.82);
+    text-shadow: 0 1px 12px rgb(0 0 0 / 0.6);
+  }
+</style>

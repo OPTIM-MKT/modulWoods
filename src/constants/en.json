@@ -41,7 +41,8 @@
     "close": "Close",
     "language": "Language",
     "theme": "Toggle theme",
-    "skip": "Skip to content"
+    "skip": "Skip to content",
+    "proyectos": "Projects"
   },
   "common": {
     "viewAll": "View all",

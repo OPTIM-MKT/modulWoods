@@ -54,10 +54,7 @@ const items = slides.map((slide, index) => ({
             sizes="100vw"
             loading={index === 0 ? "eager" : "lazy"}
             fetchpriority={index === 0 ? "high" : "auto"}
-            class:list={[
-              "h-full w-full scale-[1.06] object-cover",
-              position,
-            ]}
+            class:list={["h-full w-full scale-[1.06] object-cover", position]}
           />
         </div>
       ))
@@ -139,10 +136,7 @@ const items = slides.map((slide, index) => ({
                 data-hero-dot={index}
                 aria-label={eyebrow}
                 aria-selected={index === 0 ? "true" : "false"}
-                class:list={[
-                  "hero-dot",
-                  index === 0 && "hero-dot--active",
-                ]}
+                class:list={["hero-dot", index === 0 && "hero-dot--active"]}
               >
                 <span class="hero-dot__fill" aria-hidden="true" />
               </button>
@@ -150,10 +144,6 @@ const items = slides.map((slide, index) => ({
           ))
         }
       </ul>
-
-      <span class="type-label ml-auto hidden text-white/45 sm:block">
-        {scroll}
-      </span>
     </div>
   </div>
 </section>
@@ -274,12 +264,12 @@ const items = slides.map((slide, index) => ({
       timer = setTimeout(() => go(index + 1), AUTOPLAY_MS);
     };
 
-    root.querySelector("[data-hero-next]")?.addEventListener("click", () =>
-      go(index + 1),
-    );
-    root.querySelector("[data-hero-prev]")?.addEventListener("click", () =>
-      go(index - 1),
-    );
+    root
+      .querySelector("[data-hero-next]")
+      ?.addEventListener("click", () => go(index + 1));
+    root
+      .querySelector("[data-hero-prev]")
+      ?.addEventListener("click", () => go(index - 1));
     dots.forEach((dot, i) => dot.addEventListener("click", () => go(i)));
 
     // Pause while the pointer rests on the hero, or while the tab is hidden.

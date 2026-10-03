@@ -146,9 +146,12 @@ export default function ContactForm({ copy, lang }: Props) {
         </Field>
 
         <div className="flex flex-col gap-4 pt-1 sm:flex-row sm:items-center sm:justify-between">
-          <p className="max-w-sm text-xs leading-relaxed text-faint">
-            {copy.consent}
-          </p>
+          <div className="max-w-sm space-y-1.5">
+            <p className="text-xs font-semibold text-secondary">We answer in English and Spanish.</p>
+            <p className="text-xs leading-relaxed text-faint">
+              {copy.consent}
+            </p>
+          </div>
 
           <button
             type="submit"

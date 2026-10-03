@@ -25,6 +25,11 @@ const link = (key: RouteKey) => ({
 const left = NAV_LEFT.map(link);
 const right = NAV_RIGHT.map(link);
 const all = NAV_ALL.map(link);
+
+if (lang === "es") {
+  left.push(link("proyectos"));
+  all.splice(NAV_LEFT.length, 0, link("proyectos"));
+}
 ---
 
 <header

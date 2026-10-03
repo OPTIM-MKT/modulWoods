@@ -26,6 +26,7 @@ export const ROUTES = {
     finishes: "finishes",
     products: "products",
     contact: "contact",
+    proyectos: "proyectos",
   },
   en: {
     index: "",
@@ -35,6 +36,7 @@ export const ROUTES = {
     finishes: "finishes",
     products: "products",
     contact: "contact",
+    proyectos: "proyectos",
   },
 } as const;
 
