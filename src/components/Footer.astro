@@ -152,7 +152,14 @@ const year = new Date().getFullYear();
     <div
       class="mt-14 flex flex-col gap-3 border-t border-onPrimary/12 pt-7 text-xs text-onPrimary/55 sm:flex-row sm:items-center sm:justify-between"
     >
-      <p>&copy; {year} {SITE.name}. {i18n.footer.rights}</p>
+      <p>
+        &copy; {year} {SITE.name}. {i18n.footer.rights} Made by <a
+          href="https://optimmkt.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="footer-link underline underline-offset-2">Optim</a
+        >
+      </p>
       <p>{i18n.footer.madeIn}</p>
     </div>
   </div>
