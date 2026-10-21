@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Toaster, toast } from "sonner";
 import { FiSend } from "react-icons/fi";
 
 import type { Dictionary } from "@/i18n/i18n";
+import { contactFormSchema, type ContactFormValues } from "./contact.schema";
 
 type FormCopy = Dictionary["contact"]["form"];
 
@@ -13,32 +13,18 @@ interface Props {
   lang: string;
 }
 
-/** Built per-render so the messages come from the active dictionary. */
-const buildSchema = (t: FormCopy) =>
-  z.object({
-    name: z.string().trim().min(2, t.required),
-    email: z.string().trim().email({ message: t.invalidEmail }),
-    phone: z.string().trim().optional(),
-    company: z.string().trim().optional(),
-    message: z.string().trim().min(12, t.tooShort),
-    /** Honeypot — real people never fill this in. */
-    website: z.string().max(0).optional(),
-  });
-
-type FormValues = z.infer<ReturnType<typeof buildSchema>>;
-
 export default function ContactForm({ copy, lang }: Props) {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
-    resolver: zodResolver(buildSchema(copy)),
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
     mode: "onBlur",
   });
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: ContactFormValues) => {
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
@@ -147,10 +133,10 @@ export default function ContactForm({ copy, lang }: Props) {
 
         <div className="flex flex-col gap-4 pt-1 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-sm space-y-1.5">
-            <p className="text-xs font-semibold text-secondary">We answer in English and Spanish.</p>
-            <p className="text-xs leading-relaxed text-faint">
-              {copy.consent}
+            <p className="text-xs font-semibold text-secondary">
+              We answer in English and Spanish.
             </p>
+            <p className="text-xs leading-relaxed text-faint">{copy.consent}</p>
           </div>
 
           <button
@@ -176,7 +162,9 @@ export default function ContactForm({ copy, lang }: Props) {
   );
 }
 
-/** Label + control + inline error, so validation reads next to what failed. */
+/* -------------------------------------------------------------------------- */
+/*  Label + control + inline error                                             */
+/* -------------------------------------------------------------------------- */
 function Field({
   id,
   label,
